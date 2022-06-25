@@ -7,8 +7,8 @@ import com.guipadovan.ecms.domain.Role;
 import com.guipadovan.ecms.repo.AppUserRepository;
 import com.guipadovan.ecms.repo.ConfirmationTokenRepository;
 import com.guipadovan.ecms.repo.RoleRepository;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,7 +18,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-@RequiredArgsConstructor
 @Transactional
 @Slf4j
 @Service
@@ -28,6 +27,14 @@ public class AppUserServiceImpl implements AppUserService {
     private final RoleRepository roleRepository;
     private final ConfirmationTokenRepository tokenRepository;
     private final PasswordEncoder passwordEncoder;
+
+    @Autowired
+    public AppUserServiceImpl(AppUserRepository appUserRepository, RoleRepository roleRepository, ConfirmationTokenRepository tokenRepository, PasswordEncoder passwordEncoder) {
+        this.appUserRepository = appUserRepository;
+        this.roleRepository = roleRepository;
+        this.tokenRepository = tokenRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     // used only by spring authentication manager
     @Override
@@ -46,6 +53,7 @@ public class AppUserServiceImpl implements AppUserService {
 
         user.setPassword(passwordEncoder.bCryptPasswordEncoder().encode(user.getPassword()));
 
+        // TODO remove this & create default roles;
         if (getRole("admin").isEmpty())
             saveRole(new Role("admin"));
 
@@ -78,7 +86,7 @@ public class AppUserServiceImpl implements AppUserService {
             log.info("Adding new role {} to user {}", role.getName(), appUser.getUsername());
             appUser.getRoles().add(role);
         }, () -> {
-            throw new IllegalStateException("User not found");
+            throw new NullPointerException("User " + username + " not found");
         });
     }
 
@@ -101,13 +109,19 @@ public class AppUserServiceImpl implements AppUserService {
     @Override
     public Optional<AppUser> getUser(String username) {
         log.info("Fetching user {} from database", username);
-        return Optional.ofNullable(appUserRepository.findByUsername(username));
+        return appUserRepository.findByUsername(username);
+    }
+
+    @Override
+    public Optional<AppUser> getUserById(Long id) {
+        log.info("Fetching user with id {} from database", id);
+        return appUserRepository.findById(id);
     }
 
     @Override
     public Optional<AppUser> getUserByEmail(String email) {
         log.info("Fetching user with email {} from database", email);
-        return Optional.ofNullable(appUserRepository.findByEmail(email));
+        return appUserRepository.findByEmail(email);
     }
 
     @Override

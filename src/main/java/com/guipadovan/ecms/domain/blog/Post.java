@@ -22,15 +22,19 @@ public class Post {
     @SequenceGenerator(name = "post_seq")
     @Column(name = "id", nullable = false)
     private Long id;
-    @ManyToOne
-    @JoinColumn(name = "author_id")
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "author_id", nullable = false)
     private AppUser author;
-    @Column(columnDefinition = "MEDIUMTEXT")
+    @Column(nullable = false)
+    private String title;
+    private String subtitle;
+    @Column(nullable = false, columnDefinition = "MEDIUMTEXT")
     private String text;
     @OneToMany(fetch = FetchType.LAZY)
     private Collection<PostReaction> reactions = new ArrayList<>();
     @OneToMany(fetch = FetchType.LAZY)
-    private Collection<Comment> comments = new ArrayList<>();
+    private Collection<PostComment> comments = new ArrayList<>();
+    @Column(nullable = false)
     private LocalDateTime postedAt, updatedAt;
     private boolean locked;
 

@@ -1,4 +1,4 @@
-import { getUser, isAuthenticated, logout } from '../../services/auth';
+import { getDecodedToken, isAuthenticated, logout } from '../../services/auth';
 import { HStack, Icon, IconButton, Image, Text, useColorModeValue } from '@chakra-ui/react';
 import { FaPowerOff } from 'react-icons/all';
 import { useNavigate } from 'react-router';
@@ -13,8 +13,8 @@ export default function MenuHeader() {
   return (isAuthenticated() ? (
     <HStack alignItems={'center'} justifyContent={'space-between'} py={2} rounded={'6px 0 0'} bg={bgColor} boxShadow={bgShadow}>
       <HStack spacing={'2'}>
-        <Image ml={'12px'} w={'30px'} h={'30px'} src={'https://mc-heads.net/head/' + getUser().sub + '/right'} />
-        <Text>{getUser().sub}</Text>
+        <Image ml={'12px'} w={'30px'} h={'30px'} src={'https://mc-heads.net/head/' + getDecodedToken().sub + '/right'} />
+        <Text>{getDecodedToken().sub}</Text>
       </HStack>
       <IconButton size='sm' fontSize='md' aria-label={`Logout`} variant='solid' bg={'red.500'} color={'white'}
                   borderRadius={'50%'} onClick={() => {

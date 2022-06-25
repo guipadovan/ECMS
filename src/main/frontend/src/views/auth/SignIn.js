@@ -65,7 +65,7 @@ export default function SignIn() {
               username: values.username,
               password: values.password,
             }).then(res => {
-              login(res.data.token);
+              login(res.data.token, res.data.user);
               navigate('/app/dashboard');
             }).catch(err => {
 

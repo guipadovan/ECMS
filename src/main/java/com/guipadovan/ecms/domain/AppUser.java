@@ -25,21 +25,22 @@ public class AppUser implements UserDetails {
     @SequenceGenerator(name = "app_user_seq")
     @Column(name = "id", nullable = false)
     private Long id;
-    @Column(unique = true)
+    @Column(nullable = false, unique = true)
     private String username;
-    @Column(unique = true)
+    @Column(nullable = false, unique = true)
     private String email;
+    @Column(nullable = false)
     private String password;
     private LocalDateTime createdAt;
     @OneToMany(fetch = FetchType.EAGER)
     private Collection<Role> roles = new ArrayList<>();
     private boolean locked, enabled;
 
-    public AppUser(String username, String email, String password) {
+    public AppUser(String username, String email, String password, LocalDateTime createdAt) {
         this.username = username;
         this.email = email;
         this.password = password;
-        this.createdAt = LocalDateTime.now();
+        this.createdAt = createdAt;
         this.locked = false;
         this.enabled = false;
     }

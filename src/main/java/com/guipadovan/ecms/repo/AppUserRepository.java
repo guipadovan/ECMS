@@ -6,13 +6,15 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 public interface AppUserRepository extends JpaRepository<AppUser, Long> {
 
     @Query("select a from AppUser a where a.username = ?1")
-    AppUser findByUsername(String username);
+    Optional<AppUser> findByUsername(String username);
 
     @Query("select a from AppUser a where a.email = ?1")
-    AppUser findByEmail(String email);
+    Optional<AppUser> findByEmail(String email);
 
     @Query("select (count(a) > 0) from AppUser a where a.email = ?1")
     boolean existsByEmail(String email);

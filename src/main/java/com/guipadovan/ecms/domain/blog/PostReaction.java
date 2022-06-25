@@ -19,11 +19,11 @@ public class PostReaction {
     @SequenceGenerator(name = "post_reaction_seq")
     @Column(name = "id", nullable = false)
     private Long id;
-    @ManyToOne
-    @JoinColumn(name = "app_user_id")
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "app_user_id", nullable = false)
     private AppUser appUser;
-    @ManyToOne
-    @JoinColumn(name = "reaction_id")
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "reaction_id", nullable = false)
     private Reaction reaction;
 
 }

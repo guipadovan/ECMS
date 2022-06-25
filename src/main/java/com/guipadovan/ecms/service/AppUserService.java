@@ -24,6 +24,8 @@ public interface AppUserService extends UserDetailsService {
 
     Optional<AppUser> getUser(String username);
 
+    Optional<AppUser> getUserById(Long id);
+
     Optional<AppUser> getUserByEmail(String email);
 
     Optional<Role> getRole(String role);

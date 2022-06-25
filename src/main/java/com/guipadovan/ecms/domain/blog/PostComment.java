@@ -7,28 +7,30 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "comments")
-public class Comment {
+@Table(name = "post_comments")
+public class PostComment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "comment_seq")
     @SequenceGenerator(name = "comment_seq")
     @Column(name = "id", nullable = false)
     private Long id;
-    @ManyToOne
-    @JoinColumn(name = "author_id")
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "author_id", nullable = false)
     private AppUser author;
+    @Column(nullable = false)
     private String text;
+    @Column(nullable = false)
+    private LocalDateTime postedAt;
 
-    public Comment(AppUser author, String text) {
+    public PostComment(AppUser author, String text, LocalDateTime postedAt) {
         this.author = author;
         this.text = text;
+        this.postedAt = postedAt;
     }
 }

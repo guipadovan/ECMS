@@ -18,6 +18,7 @@ public class Reaction {
     @SequenceGenerator(name = "reaction_types_seq")
     @Column(name = "id", nullable = false)
     private Long id;
+    @Column(nullable = false)
     private String name;
     private String icon;
     private String color;
