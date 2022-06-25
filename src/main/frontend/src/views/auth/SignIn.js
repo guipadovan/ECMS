@@ -78,16 +78,9 @@ export default function SignIn() {
                 });
 
               actions.setSubmitting(false);
-              if (err && err.response) {
-                switch (err.response.status) {
-                  case 401:
-                    errorAlert(err.response.data.exception);
-                    break;
-                  default:
-                    errorAlert('Something went wrong');
-                    break;
-                }
-              } else
+              if (err && err.response)
+                errorAlert(err.response.data.message);
+              else
                 errorAlert('Something went wrong');
             });
           }}

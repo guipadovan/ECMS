@@ -2,11 +2,11 @@ package com.guipadovan.ecms.service;
 
 import com.guipadovan.ecms.api.request.AuthRequest;
 import com.guipadovan.ecms.api.request.RegisterRequest;
+import com.guipadovan.ecms.api.response.AuthResponse;
 import com.guipadovan.ecms.config.JWTTokenHelper;
 import com.guipadovan.ecms.domain.AppUser;
 import com.guipadovan.ecms.domain.ConfirmationToken;
 import com.guipadovan.ecms.service.utils.EmailValidator;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -21,6 +21,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.UUID;
 
 @Service
@@ -44,122 +45,70 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public ResponseEntity<String> register(RegisterRequest registerRequest) {
-        JSONObject jsonResponse = new JSONObject();
-
-        String exception = null;
         if (registerRequest.username() == null)
-            exception = "Username can't be null";
+            throw new IllegalStateException("Username can't be null");
         else if (registerRequest.email() == null)
-            exception = "Email can't be null";
+            throw new IllegalStateException("Email can't be null");
         else if (!emailValidator.test(registerRequest.email()))
-            exception = "Invalid email format";
+            throw new IllegalStateException("Invalid email format");
         else if (registerRequest.password() == null)
-            exception = "Password can't be null";
+            throw new IllegalStateException("Password can't be null");
         else if (registerRequest.confirmPassword() == null)
-            exception = "Password confirmation can't be null";
+            throw new IllegalStateException("Password confirmation can't be null");
 
-        AppUser appUser = null;
-        try {
-            appUser = appUserService.saveUser(new AppUser(registerRequest.username(), registerRequest.email(), registerRequest.password()));
-        } catch (IllegalStateException e) {
-            exception = e.getMessage();
-        }
+        AppUser appUser = appUserService.saveUser(new AppUser(registerRequest.username(), registerRequest.email(), registerRequest.password())).orElseThrow();
 
-        if (exception == null && appUser != null) {
-            generateAndSendConfirmationToken(appUser);
+        generateAndSendConfirmationToken(appUser);
 
-            try {
-                jsonResponse.put("message", "User " + appUser.getUsername() + " saved successfully");
-            } catch (JSONException e) {
-                throw new RuntimeException(e);
-            }
-
-            log.info("Sending register response to frontend");
-            return new ResponseEntity<>(jsonResponse.toString(), HttpStatus.OK);
-        }
-
-        try {
-            jsonResponse.put("exception", exception);
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
-        }
-        log.info("Sending register exception ({}) to frontend", exception);
-        return new ResponseEntity<>(jsonResponse.toString(), HttpStatus.UNAUTHORIZED);
+        log.info("Sending register response to frontend");
+        return ResponseEntity.ok("User " + appUser.getUsername() + " saved successfully");
     }
 
     @Override
     public ResponseEntity<String> login(AuthRequest authRequest) {
         JSONObject jsonResponse = new JSONObject();
 
-        String exception = null;
-        AppUser appUser = appUserService.getUser(authRequest.username());
-        if (appUser == null)
-            exception = "Username not registered";
-        else if (!appUser.isEnabled())
-            exception = "Account not confirmed";
+        AppUser appUser = appUserService.getUser(authRequest.username()).orElseThrow(() -> new IllegalStateException("Username not registered"));
 
-        if (exception == null) {
-            try {
-                Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                        authRequest.username(), authRequest.password()));
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-
-                if (authentication.isAuthenticated()) {
-                    try {
-                        jsonResponse.put("token", tokenHelper.createToken(authRequest.username()));
-                    } catch (JSONException e) {
-                        throw new RuntimeException(e);
-                    }
-                    return new ResponseEntity<>(jsonResponse.toString(), HttpStatus.OK);
-                }
-                exception = "Incorrect username or password";
-            } catch (AuthenticationException e) {
-                exception = "Incorrect username or password";
-            }
-        }
+        if (!appUser.isEnabled())
+            throw new IllegalStateException("Account not confirmed");
 
         try {
-            jsonResponse.put("exception", exception);
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
+            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.username(), authRequest.password()));
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            if (authentication.isAuthenticated()) {
+                try {
+                    jsonResponse.put("token", tokenHelper.createToken(authRequest.username()));
+                    jsonResponse.put("user", new AuthResponse(appUser.getId(), appUser.getUsername(), appUser.getEmail(), appUser.getRoles(), appUser.isLocked()));
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
+                return new ResponseEntity<>(jsonResponse.toString(), HttpStatus.OK);
+            }
+        } catch (AuthenticationException ignored) {
         }
-        log.info("Sending login exception ({}) to frontend", exception);
-        return new ResponseEntity<>(jsonResponse.toString(), HttpStatus.UNAUTHORIZED);
+
+        throw new IllegalStateException("Incorrect username or password");
     }
 
     @Override
     public ResponseEntity<String> confirmToken(String token) {
-        ConfirmationToken confirmationToken = appUserService.getConfirmationToken(token);
-        JSONObject jsonResponse = new JSONObject();
+        ConfirmationToken confirmationToken = appUserService.getConfirmationToken(token).orElseThrow(() -> new IllegalStateException("Token not found"));
 
-        String exception = null;
         if (confirmationToken.getConfirmedAt() != null)
-            exception = "account already confirmed";
+            throw new IllegalStateException("Account already confirmed");
         else if (confirmationToken.getExpiresAt().isBefore(LocalDateTime.now())) {
             generateAndSendConfirmationToken(confirmationToken.getAppUser());
-            exception = "token expired";
+            throw new IllegalStateException("Token expired");
         }
 
-        if (exception == null) {
-            appUserService.setConfirmedAt(token);
-            appUserService.enableUser(confirmationToken.getAppUser().getUsername());
+        appUserService.setConfirmedAt(token);
+        appUserService.enableUser(confirmationToken.getAppUser().getUsername());
 
-            try {
-                jsonResponse.put("message", "token " + token + " confirmed successfully");
-            } catch (JSONException e) {
-                throw new RuntimeException(e);
-            }
-            log.info("Sending token confirmation response to frontend");
-            return new ResponseEntity<>(jsonResponse.toString(), HttpStatus.OK);
-        }
 
-        try {
-            jsonResponse.put("exception", exception);
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
-        }
-        log.info("Sending token confirmation exception ({}) to frontend", exception);
-        return new ResponseEntity<>(jsonResponse.toString(), HttpStatus.UNAUTHORIZED);
+        log.info("Sending token confirmation response to frontend");
+        return ResponseEntity.ok("Token " + token + " confirmed successfully");
     }
 
     @Override
@@ -173,11 +122,11 @@ public class AuthServiceImpl implements AuthService {
     }
 
     private void generateAndSendConfirmationToken(AppUser appUser) {
-        ConfirmationToken token = appUserService.saveConfirmationToken(new ConfirmationToken(UUID.randomUUID().toString(), LocalDateTime.now(),
-                LocalDateTime.now().plusMinutes(10), appUser));
-
-        String confirmationLink = "http://localhost:8080/api/v1/auth/confirm?token=" + token.getToken();
-        emailService.send(appUser.getEmail(), "Confirm your account", confirmationEmail("", confirmationLink));
+        appUserService.saveConfirmationToken(new ConfirmationToken(UUID.randomUUID().toString(), LocalDateTime.now(),
+                LocalDateTime.now().plusMinutes(10), appUser)).ifPresent(token -> {
+            String confirmationLink = "http://localhost:8080/api/v1/auth/confirm?token=" + token.getToken();
+            emailService.send(appUser.getEmail(), "Confirm your account", confirmationEmail("", confirmationLink));
+        });
     }
 
     private String confirmationEmail(String name, String link) {

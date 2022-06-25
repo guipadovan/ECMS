@@ -31,7 +31,7 @@ public class AppUser implements UserDetails {
     private String email;
     private String password;
     private LocalDateTime createdAt;
-    @ManyToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER)
     private Collection<Role> roles = new ArrayList<>();
     private boolean locked, enabled;
 

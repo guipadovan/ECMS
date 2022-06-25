@@ -5,7 +5,8 @@ import { Field, Formik } from 'formik';
 import AlertCard from '../../components/AlertCard';
 import {
   Box,
-  Button, Divider,
+  Button,
+  Divider,
   FormControl,
   FormErrorMessage,
   FormLabel,
@@ -93,17 +94,12 @@ export default function SignUp() {
 
               actions.setSubmitting(false);
               if (err && err.response) {
-                switch (err.response.status) {
-                  case 401:
-                    if (err.response.data.exception.includes('Username'))
-                      actions.setErrors({ username: err.response.data.exception });
-                    else if (err.response.data.exception.includes('Email'))
-                      actions.setErrors({ email: err.response.data.exception });
-                    break;
-                  default:
-                    errorAlert();
-                    break;
-                }
+                if (err.response.data.message.includes('Username'))
+                  actions.setErrors({ username: err.response.data.message });
+                else if (err.response.data.message.includes('Email'))
+                  actions.setErrors({ email: err.response.data.message });
+                else
+                  errorAlert();
               } else
                 errorAlert();
             });

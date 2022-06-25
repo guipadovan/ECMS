@@ -6,14 +6,15 @@ import com.guipadovan.ecms.domain.Role;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface AppUserService extends UserDetailsService {
 
-    AppUser saveUser(AppUser user);
+    Optional<AppUser> saveUser(AppUser user);
 
-    Role saveRole(Role role);
+    Optional<Role> saveRole(Role role);
 
-    ConfirmationToken saveConfirmationToken(ConfirmationToken token);
+    Optional<ConfirmationToken> saveConfirmationToken(ConfirmationToken token);
 
     void addRoleToUser(String username, String role);
 
@@ -21,13 +22,13 @@ public interface AppUserService extends UserDetailsService {
 
     void setConfirmedAt(String token);
 
-    AppUser getUser(String username);
+    Optional<AppUser> getUser(String username);
 
-    AppUser getUserByEmail(String email);
+    Optional<AppUser> getUserByEmail(String email);
 
-    Role getRole(String role);
+    Optional<Role> getRole(String role);
 
-    ConfirmationToken getConfirmationToken(String token);
+    Optional<ConfirmationToken> getConfirmationToken(String token);
 
     // TODO page system
     List<AppUser> getUsers();

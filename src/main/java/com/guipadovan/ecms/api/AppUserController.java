@@ -1,10 +1,12 @@
 package com.guipadovan.ecms.api;
 
+import com.guipadovan.ecms.api.response.AppUserResponse;
 import com.guipadovan.ecms.domain.AppUser;
 import com.guipadovan.ecms.service.AppUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -18,17 +20,13 @@ public class AppUserController {
     private final AppUserService appUserService;
 
     @GetMapping("/info")
-    public ResponseEntity<AppUser> userInfo(@RequestParam("name") String name) {
-        AppUser appUser = appUserService.getUser(name);
+    public ResponseEntity<AppUserResponse> userInfo(@RequestParam("name") String name) {
+        AppUser appUser = appUserService.getUser(name).orElseThrow(() -> new UsernameNotFoundException("User " + name + " not found"));
 
-        if (appUser == null)
-            return ResponseEntity.status(404).build();
+        AppUserResponse response = new AppUserResponse(appUser.getUsername(), appUser.getCreatedAt(),
+                appUser.getRoles());
 
-        // REMOVE SENSITIVE INFORMATION
-        appUser.setEmail(null);
-        appUser.setPassword(null);
-        appUser.setId(null);
-    return ResponseEntity.of(Optional.of(appUser));
+    return ResponseEntity.of(Optional.of(response));
     }
 
 }

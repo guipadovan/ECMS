@@ -31,7 +31,7 @@ public class JWTTokenFilter extends OncePerRequestFilter {
             String username = tokenHelper.getUsernameFromToken(token);
             boolean error = true;
             if (username != null) {
-                AppUser user = appUserService.getUser(username);
+                AppUser user = appUserService.getUser(username).orElseThrow(() -> new IllegalStateException("User not found"));
                 error = false;
                 if (tokenHelper.validateToken(token, user)) {
                     Authentication authentication = tokenHelper.getAuthentication(user);
