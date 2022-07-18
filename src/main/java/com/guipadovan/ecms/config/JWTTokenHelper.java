@@ -39,11 +39,9 @@ public class JWTTokenHelper {
                 .compact();
     }
 
-    public Boolean validateToken(String token, AppUser appUser) {
+    public boolean validateToken(String token) {
         final String username = getUsernameFromToken(token);
-        return (username != null &&
-                username.equals(appUser.getUsername()) &&
-                !isTokenExpired(token));
+        return (username != null && !isTokenExpired(token));
     }
 
     private Date generateExpirationDate() {
@@ -63,11 +61,10 @@ public class JWTTokenHelper {
     }
 
     public Authentication getAuthentication(AppUser appUser) {
-        return new UsernamePasswordAuthenticationToken(appUser.getUsername(), appUser.getPassword());
+        return new UsernamePasswordAuthenticationToken(appUser, null);
     }
 
     public Claims getClaimsFromToken(String token) {
-        token = token.replace("Bearer ", "");
         return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
     }
 }

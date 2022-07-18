@@ -78,15 +78,15 @@ public class AuthController {
     @PostMapping(value = "/register", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> register(@RequestBody RegisterRequest registerRequest) {
         if (registerRequest.username() == null)
-            throw new IllegalStateException("Username can't be null");
+            throw new IllegalStateException("Invalid username");
         else if (registerRequest.email() == null)
-            throw new IllegalStateException("Email can't be null");
+            throw new IllegalStateException("Invalid email");
         else if (!emailValidator.test(registerRequest.email()))
             throw new IllegalStateException("Invalid email format");
         else if (registerRequest.password() == null)
-            throw new IllegalStateException("Password can't be null");
+            throw new IllegalStateException("Invalid password");
         else if (registerRequest.confirmPassword() == null)
-            throw new IllegalStateException("Password confirmation can't be null");
+            throw new IllegalStateException("Invalid password confirmation");
 
         AppUser appUser = appUserService.saveUser(new AppUser(registerRequest.username(), registerRequest.email(), registerRequest.password(), LocalDateTime.now())).orElseThrow();
 

@@ -15,13 +15,14 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import javax.servlet.http.HttpServletResponse;
+
 @RequiredArgsConstructor
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final RestAuthenticationEntryPoint authenticationEntryPoint;
     private final JWTTokenHelper tokenHelper;
     private final AppUserService appUserService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -34,11 +35,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable().cors()
-                .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and().exceptionHandling().authenticationEntryPoint(authenticationEntryPoint)
+        http.cors().and().csrf().disable()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and().exceptionHandling().authenticationEntryPoint((request, response, ex) ->
+                        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, ex.getMessage()))
                 .and().authorizeRequests((request) ->
-                        request.antMatchers("/api/v1/**").permitAll().anyRequest().authenticated())
+                        request.antMatchers("/api/v1/auth/**").permitAll()
+                                .antMatchers("/api/v1/post/**").permitAll()
+                                .antMatchers("/api/v1/post/new").authenticated()
+                                .antMatchers("/api/v1/post/update/**").authenticated()
+                                .antMatchers("/api/v1/post/comment/**").authenticated()
+                                .antMatchers("/api/v1/post/reaction/**").authenticated()
+                                .anyRequest().authenticated())
                 .addFilterBefore(new JWTTokenFilter(tokenHelper, appUserService), UsernamePasswordAuthenticationFilter.class);
     }
 

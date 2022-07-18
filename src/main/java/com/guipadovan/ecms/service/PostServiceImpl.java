@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -58,6 +59,26 @@ public class PostServiceImpl implements PostService {
 
         log.info("Saving new reaction {} to the database", reaction.getName());
         return Optional.of(reactionRepository.save(reaction));
+    }
+
+    @Override
+    public void updatePost(Long id, AppUser updatedBy, String title, String subtitle, String text, boolean locked) {
+        getPost(id).ifPresentOrElse(post -> {
+
+            if (post.getTitle() == null)
+                throw new IllegalStateException("Post title can't be null");
+            else if (post.getText() == null)
+                throw new IllegalStateException("Post body can't be null");
+
+            log.info("Updating post {} by {}", post.getTitle(), post.getAuthor());
+            post.setTitle(title);
+            post.setSubtitle(subtitle);
+            post.setText(text);
+            post.setUpdatedAt(LocalDateTime.now());
+            post.setLocked(locked);
+        }, () -> {
+            throw new NullPointerException("Post not found");
+        });
     }
 
     @Override

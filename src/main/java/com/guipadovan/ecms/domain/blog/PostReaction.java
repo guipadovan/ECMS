@@ -26,4 +26,8 @@ public class PostReaction {
     @JoinColumn(name = "reaction_id", nullable = false)
     private Reaction reaction;
 
+    public PostReaction(AppUser appUser, Reaction reaction) {
+        this.appUser = appUser;
+        this.reaction = reaction;
+    }
 }

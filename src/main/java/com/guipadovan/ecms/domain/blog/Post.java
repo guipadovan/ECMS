@@ -25,6 +25,9 @@ public class Post {
     @ManyToOne(optional = false)
     @JoinColumn(name = "author_id", nullable = false)
     private AppUser author;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "last_updated_by_id", nullable = false)
+    private AppUser lastUpdatedBy;
     @Column(nullable = false)
     private String title;
     private String subtitle;
@@ -38,11 +41,14 @@ public class Post {
     private LocalDateTime postedAt, updatedAt;
     private boolean locked;
 
-    public Post(AppUser author, String text, LocalDateTime postedAt, LocalDateTime updatedAt, boolean locked) {
+    public Post(AppUser author, String title, String subtitle, String text, LocalDateTime postedAt, boolean locked) {
         this.author = author;
+        this.lastUpdatedBy = author;
+        this.title = title;
+        this.subtitle = subtitle;
         this.text = text;
         this.postedAt = postedAt;
-        this.updatedAt = updatedAt;
+        this.updatedAt = postedAt;
         this.locked = locked;
     }
 }

@@ -3,20 +3,24 @@ package com.guipadovan.ecms.api;
 import com.guipadovan.ecms.api.response.AppUserResponse;
 import com.guipadovan.ecms.domain.AppUser;
 import com.guipadovan.ecms.service.AppUserService;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
-@RequiredArgsConstructor
 @RestController
 @RequestMapping("api/v1/user")
 @CrossOrigin(origins = "http://localhost:3000")
 public class AppUserController {
 
     private final AppUserService appUserService;
+
+    @Autowired
+    public AppUserController(AppUserService appUserService) {
+        this.appUserService = appUserService;
+    }
 
     @GetMapping("/info")
     public ResponseEntity<AppUserResponse> userInfo(@RequestParam("name") String name) {

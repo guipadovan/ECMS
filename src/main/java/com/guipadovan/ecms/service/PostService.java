@@ -1,5 +1,6 @@
 package com.guipadovan.ecms.service;
 
+import com.guipadovan.ecms.domain.AppUser;
 import com.guipadovan.ecms.domain.blog.Post;
 import com.guipadovan.ecms.domain.blog.PostComment;
 import com.guipadovan.ecms.domain.blog.PostReaction;
@@ -13,6 +14,8 @@ public interface PostService {
     Optional<Post> savePost(Post post);
 
     Optional<Reaction> saveReaction(Reaction reaction);
+
+    void updatePost(Long id, AppUser updatedBy, String title, String subtitle, String text, boolean locked);
 
     void addPostReaction(Long postId, PostReaction postReaction);
 

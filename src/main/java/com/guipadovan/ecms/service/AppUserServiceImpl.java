@@ -93,7 +93,7 @@ public class AppUserServiceImpl implements AppUserService {
     @Override
     public void enableUser(String username) {
         getUser(username).ifPresentOrElse(appUser -> {
-            log.info("Enabling user {} account", username);
+            log.info("Enabling {}'s account", username);
             appUser.setEnabled(true);
         }, () -> {
             throw new NullPointerException("User " + username + " not found");
