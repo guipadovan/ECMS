@@ -1,6 +1,5 @@
 # <p align="center"> ECMS </p>
-Content management system with Spring and React
-<hr>
+<p align="center">Content management system with Spring and React</p>
 
 ### Description
 This project was created with the purpose of testing and training my backend & frontend skills. Currenty there aren't many features and is not production ready.
