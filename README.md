@@ -24,7 +24,7 @@ This project was created with the purpose of testing and training my backend & f
   - Comment
   - Reactions
 
-**Planned**
+### Planned
 - Admin & User dashboard
 
 ### Pictures

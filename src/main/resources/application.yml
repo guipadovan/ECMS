@@ -41,3 +41,9 @@ jwt:
 
 config:
   email: "contato@exitius.com"
+  master-user:
+    username: Guii
+    email: "guipadovam@gmail.com"
+    password: asd123
+  master-role: admin
+  default-role: user

@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -52,12 +53,6 @@ public class AppUserServiceImpl implements AppUserService {
         });
 
         user.setPassword(passwordEncoder.bCryptPasswordEncoder().encode(user.getPassword()));
-
-        // TODO remove this & create default roles;
-        if (getRole("admin").isEmpty())
-            saveRole(new Role("admin"));
-
-        user.setRoles(Collections.singleton(getRole("admin").get()));
 
         log.info("Saving new user {} to the database", user.getUsername());
         return Optional.of(appUserRepository.save(user));

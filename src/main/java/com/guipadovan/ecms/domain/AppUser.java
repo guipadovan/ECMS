@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.Hibernate;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -48,8 +49,15 @@ public class AppUser implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Collection<SimpleGrantedAuthority> grantedAuthorities = new ArrayList<>();
-        roles.forEach(role -> grantedAuthorities.add(new SimpleGrantedAuthority(role.getName())));
+        roles.forEach(role -> {
+            grantedAuthorities.add(new SimpleGrantedAuthority(role.getName()));
+            role.getPermissions().forEach(permission -> grantedAuthorities.add(new SimpleGrantedAuthority(permission.name())));
+        });
         return grantedAuthorities;
+    }
+
+    public boolean hasPermission(Permission permission) {
+        return getAuthorities().stream().anyMatch(authority -> authority.getAuthority().equalsIgnoreCase(permission.name()));
     }
 
     @Override
