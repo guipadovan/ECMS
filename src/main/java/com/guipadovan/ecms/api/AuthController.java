@@ -10,17 +10,15 @@ import com.guipadovan.ecms.service.AppUserService;
 import com.guipadovan.ecms.service.EmailService;
 import com.guipadovan.ecms.service.utils.EmailValidator;
 import lombok.extern.slf4j.Slf4j;
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -48,31 +46,19 @@ public class AuthController {
     }
 
     @PostMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> login(@RequestBody AuthRequest authRequest) {
-        JSONObject jsonResponse = new JSONObject();
-
-        AppUser appUser = appUserService.getUser(authRequest.username()).orElseThrow(() -> new IllegalStateException("Username not registered"));
+    public ResponseEntity<AuthResponse> login(@RequestBody AuthRequest authRequest) {
+        AppUser appUser = appUserService.getUser(authRequest.username()).orElseThrow(() -> new UsernameNotFoundException("Username not registered"));
 
         if (!appUser.isEnabled())
             throw new IllegalStateException("Account not confirmed");
 
-        try {
-            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.username(), authRequest.password()));
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.username(), authRequest.password()));
+        SecurityContextHolder.getContext().setAuthentication(authentication);
 
-            if (authentication.isAuthenticated()) {
-                try {
-                    jsonResponse.put("token", tokenHelper.createToken(authRequest.username()));
-                    jsonResponse.put("user", new AuthResponse(appUser.getId(), appUser.getUsername(), appUser.getEmail(), appUser.getRoles(), appUser.getCreatedAt(), appUser.isLocked()));
-                } catch (JSONException e) {
-                    throw new RuntimeException(e);
-                }
-                return new ResponseEntity<>(jsonResponse.toString(), HttpStatus.OK);
-            }
-        } catch (AuthenticationException ignored) {
-        }
+        if (authentication.isAuthenticated())
+            return ResponseEntity.ok(new AuthResponse(tokenHelper.createToken(appUser)));
 
-        throw new IllegalStateException("Incorrect username or password");
+        throw new BadCredentialsException("Incorrect username or password");
     }
 
     @PostMapping(value = "/register", produces = MediaType.APPLICATION_JSON_VALUE)

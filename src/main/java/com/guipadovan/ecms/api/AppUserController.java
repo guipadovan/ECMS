@@ -8,8 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
-
 @RestController
 @RequestMapping("api/v1/user")
 @CrossOrigin(origins = "http://localhost:3000")
@@ -29,7 +27,7 @@ public class AppUserController {
         AppUserResponse response = new AppUserResponse(appUser.getUsername(), appUser.getCreatedAt(),
                 appUser.getRoles());
 
-        return ResponseEntity.of(Optional.of(response));
+        return ResponseEntity.ok(response);
     }
 
 }

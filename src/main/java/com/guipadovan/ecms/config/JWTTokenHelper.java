@@ -1,17 +1,19 @@
 package com.guipadovan.ecms.config;
 
 import com.guipadovan.ecms.domain.AppUser;
+import com.guipadovan.ecms.domain.Role;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.Base64;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Component
 public class JWTTokenHelper {
@@ -29,11 +31,18 @@ public class JWTTokenHelper {
         secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
     }
 
-    public String createToken(String username) {
+    public String createToken(AppUser appUser) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("id", appUser.getId());
+        claims.put("email", appUser.getEmail());
+        claims.put("roles", appUser.getRoles().stream().map(Role::getName).collect(Collectors.toList()));
+        claims.put("createdAt", appUser.getCreatedAt());
+        claims.put("locked", appUser.isLocked());
         return Jwts.builder()
                 .setIssuer(appName)
-                .setSubject(username)
+                .setSubject(appUser.getUsername())
                 .setIssuedAt(new Date())
+                .setClaims(claims)
                 .setExpiration(generateExpirationDate())
                 .signWith(SIGNATURE_ALGORITHM, secretKey)
                 .compact();
@@ -58,10 +67,6 @@ public class JWTTokenHelper {
 
     private Date getExpirationDate(String token) {
         return getClaimsFromToken(token).getExpiration();
-    }
-
-    public Authentication getAuthentication(AppUser appUser) {
-        return new UsernamePasswordAuthenticationToken(appUser, null);
     }
 
     public Claims getClaimsFromToken(String token) {
