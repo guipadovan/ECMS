@@ -36,13 +36,13 @@ public class JWTTokenHelper {
         claims.put("id", appUser.getId());
         claims.put("email", appUser.getEmail());
         claims.put("roles", appUser.getRoles().stream().map(Role::getName).collect(Collectors.toList()));
-        claims.put("createdAt", appUser.getCreatedAt());
+        claims.put("createdAt", appUser.getCreatedAt().toString());
         claims.put("locked", appUser.isLocked());
         return Jwts.builder()
+                .setClaims(claims)
                 .setIssuer(appName)
                 .setSubject(appUser.getUsername())
                 .setIssuedAt(new Date())
-                .setClaims(claims)
                 .setExpiration(generateExpirationDate())
                 .signWith(SIGNATURE_ALGORITHM, secretKey)
                 .compact();
