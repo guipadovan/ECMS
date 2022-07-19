@@ -1,11 +1,14 @@
 package com.guipadovan.ecms.config;
 
 import com.guipadovan.ecms.domain.AppUser;
+import com.guipadovan.ecms.domain.Permission;
 import com.guipadovan.ecms.domain.Role;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -23,19 +26,23 @@ public class JWTTokenHelper {
     private String appName;
     @Value("${jwt.auth.secret_key}")
     private String secretKey;
-    @Value("${jwt.auth.expires_in}")
-    private int expiresIn;
+    @Value("${jwt.auth.expiration.access}")
+    private int accessExpiresIn;
+    @Getter
+    @Value("${jwt.auth.expiration.refresh}")
+    private int refreshExpiresIn;
 
     @PostConstruct
     protected void init() {
         secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
     }
 
-    public String createToken(AppUser appUser) {
+    public String createAccessToken(AppUser appUser) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("id", appUser.getId());
         claims.put("email", appUser.getEmail());
         claims.put("roles", appUser.getRoles().stream().map(Role::getName).collect(Collectors.toList()));
+        claims.put("permissions", appUser.getRoles().stream().map(role -> role.getPermissions().stream().map(Permission::name).collect(Collectors.toList())).collect(Collectors.toList()));
         claims.put("createdAt", appUser.getCreatedAt().toString());
         claims.put("locked", appUser.isLocked());
         return Jwts.builder()
@@ -43,18 +50,28 @@ public class JWTTokenHelper {
                 .setIssuer(appName)
                 .setSubject(appUser.getUsername())
                 .setIssuedAt(new Date())
-                .setExpiration(generateExpirationDate())
+                .setExpiration(generateExpirationDate(accessExpiresIn))
+                .signWith(SIGNATURE_ALGORITHM, secretKey)
+                .compact();
+    }
+
+    public String createRefreshToken(AppUser appUser) {
+        return Jwts.builder()
+                .setIssuer(appName)
+                .setSubject(appUser.getUsername())
+                .setIssuedAt(new Date())
+                .setExpiration(generateExpirationDate(refreshExpiresIn))
                 .signWith(SIGNATURE_ALGORITHM, secretKey)
                 .compact();
     }
 
     public boolean validateToken(String token) {
-        final String username = getUsernameFromToken(token);
-        return (username != null && !isTokenExpired(token));
-    }
-
-    private Date generateExpirationDate() {
-        return new Date(new Date().getTime() + expiresIn * 1000L);
+        try {
+            final String username = getUsernameFromToken(token);
+            return (username != null && !isTokenExpired(token));
+        } catch (Exception e) {
+            throw new BadCredentialsException("Invalid credentials");
+        }
     }
 
     public boolean isTokenExpired(String token) {
@@ -71,5 +88,9 @@ public class JWTTokenHelper {
 
     public Claims getClaimsFromToken(String token) {
         return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
+    }
+
+    private Date generateExpirationDate(int minutes) {
+        return new Date(System.currentTimeMillis() + minutes * 60 * 1000L);
     }
 }

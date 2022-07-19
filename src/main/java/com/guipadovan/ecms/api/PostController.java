@@ -44,7 +44,7 @@ public class PostController {
 
     @GetMapping("/all")
     public ResponseEntity<List<Post>> getPosts() {
-        return ResponseEntity.of(Optional.of(postService.getPosts()));
+        return ResponseEntity.ok(postService.getPosts());
     }
 
     @GetMapping("/{id}")

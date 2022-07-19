@@ -11,7 +11,9 @@ import com.guipadovan.ecms.service.EmailService;
 import com.guipadovan.ecms.service.utils.EmailValidator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -55,10 +57,24 @@ public class AuthController {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.username(), authRequest.password()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        if (authentication.isAuthenticated())
-            return ResponseEntity.ok(new AuthResponse(tokenHelper.createToken(appUser)));
+        if (authentication.isAuthenticated()) {
+
+            // TODO set secure cookie
+            ResponseCookie refreshToken = ResponseCookie.from("jwt", tokenHelper.createRefreshToken(appUser))
+                    .httpOnly(true).path("/").maxAge(tokenHelper.getRefreshExpiresIn() * 60L).build();
+
+            return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, refreshToken.toString())
+                    .body(new AuthResponse(tokenHelper.createAccessToken(appUser)));
+        }
 
         throw new BadCredentialsException("Incorrect username or password");
+    }
+
+    @GetMapping(value = "/refreshToken")
+    public ResponseEntity<?> refreshToken(@CookieValue(value = "jwt") String token) {
+        AppUser appUser = appUserService.getUser(tokenHelper.getUsernameFromToken(token)).orElseThrow(() -> new IllegalStateException("User doesn't exist"));
+
+        return ResponseEntity.ok(new AuthResponse(tokenHelper.createAccessToken(appUser)));
     }
 
     @PostMapping(value = "/register", produces = MediaType.APPLICATION_JSON_VALUE)
