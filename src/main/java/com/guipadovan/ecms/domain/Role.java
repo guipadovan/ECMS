@@ -19,7 +19,7 @@ public class Role {
     @Column(name = "id", nullable = false)
     private Long id;
     private String name;
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     private List<Permission> permissions;
 
     public Role(String name, List<Permission> permissions) {

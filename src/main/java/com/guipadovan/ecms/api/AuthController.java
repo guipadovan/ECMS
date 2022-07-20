@@ -29,7 +29,7 @@ import java.util.UUID;
 @Slf4j
 @RestController
 @RequestMapping("api/v1/auth")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 public class AuthController {
 
     private final AuthenticationManager authenticationManager;
@@ -70,9 +70,12 @@ public class AuthController {
         throw new BadCredentialsException("Incorrect username or password");
     }
 
-    @GetMapping(value = "/refreshToken")
+    @GetMapping(value = "/refresh")
     public ResponseEntity<?> refreshToken(@CookieValue(value = "jwt") String token) {
         AppUser appUser = appUserService.getUser(tokenHelper.getUsernameFromToken(token)).orElseThrow(() -> new IllegalStateException("User doesn't exist"));
+
+        if (!tokenHelper.validateToken(token))
+            throw new IllegalStateException("Invalid token");
 
         return ResponseEntity.ok(new AuthResponse(tokenHelper.createAccessToken(appUser)));
     }
