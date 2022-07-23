@@ -4,27 +4,29 @@ import Dashboard from './views/dashboard/Dashboard';
 import Profile from './views/dashboard/user/Profile';
 import SignIn from './views/auth/SignIn';
 import SignUp from './views/auth/SignUp';
-import AddNews from './views/dashboard/admin/AddNews';
-import News from './views/dashboard/admin/News';
+import AddPost from './views/dashboard/admin/AddPost';
+import Posts from './views/dashboard/admin/Posts';
 import Home from './views/Home';
 import { BsBoxArrowInRight, FaCog, FaHome, FaNewspaper, FaShoppingCart, FaUserAlt, FaUserPlus } from 'react-icons/all';
+import DashboardLayout from './layouts/Dashboard';
 
 const routes = (isLoggedIn) => [
   {
     path: '/app',
-    element: isLoggedIn ? <DefaultLayout /> : <Navigate to='/signin' />,
+    //element: isLoggedIn ? <DashboardLayout /> : <Navigate to='/signin' />,
+    element: <DashboardLayout />,
     loggedIn: true,
     children: [
-      { path: '/app/profile', element: <Profile />, nav: { nav: 'user', name: 'Profile', icon: FaUserAlt } },
-      { path: '/app/dashboard', element: <Dashboard />, nav: { nav: 'user', name: 'Dashboard', icon: FaCog } },
-      { path: '/app/', element: <Navigate to='/app/dashboard' /> },
+      { path: '/app/', element: <Navigate to='/app/dashboard' />, name: 'Home' },
+      { path: '/app/dashboard', element: <Dashboard />, name: 'Dashboard', nav: { nav: 'user', icon: FaCog } },
+      { path: '/app/profile', element: <Profile />, name: 'Profile', nav: { nav: 'user', icon: FaUserAlt } },
       {
-        path: 'news',
+        path: '/app/posts',
         element: <Outlet />,
         loggedIn: true,
         children: [
-          { path: '/app/news/', element: <News />, nav: { nav: 'admin', name: 'News', icon: FaNewspaper } },
-          { path: '/app/news/add', element: <AddNews /> },
+          { path: '/app/posts/', element: <Posts />, name: 'Posts', nav: { nav: 'admin', icon: FaNewspaper } },
+          { path: '/app/posts/new', element: <AddPost />, name: 'New Post', nav: { nav: 'admin', icon: FaNewspaper } },
         ],
       },
     ],
@@ -34,17 +36,17 @@ const routes = (isLoggedIn) => [
     element: <DefaultLayout />,
     loggedIn: false,
     children: [
-      { path: '/home', element: <Home />, nav: { nav: 'main', name: 'Home', icon: FaHome } },
-      { path: '/store', element: <Home />, nav: { nav: 'main', name: 'Store', icon: FaShoppingCart } },
+      { path: '/home', element: <Home />, name: 'Home', nav: { nav: 'main', icon: FaHome } },
+      { path: '/store', element: <Home />, name: 'Store', nav: { nav: 'main', icon: FaShoppingCart } },
       {
         path: '/signin',
-        element: !isLoggedIn ? <SignIn /> : <Navigate to='/home' />,
-        nav: { nav: 'user', name: 'Sign In', icon: BsBoxArrowInRight },
+        element: !isLoggedIn ? <SignIn /> : <Navigate to='/home' />, name: 'Sign In',
+        nav: { nav: 'user', icon: BsBoxArrowInRight },
       },
       {
         path: '/signup',
-        element: !isLoggedIn ? <SignUp /> : <Navigate to='/home' />,
-        nav: { nav: 'user', name: 'Sign Up', icon: FaUserPlus },
+        element: !isLoggedIn ? <SignUp /> : <Navigate to='/home' />, name: 'Sign Up',
+        nav: { nav: 'user', icon: FaUserPlus },
       },
       { path: '/*', element: <Navigate to='/home' /> },
     ],

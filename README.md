@@ -2,7 +2,7 @@
 <p align="center">Content management system with Spring and React</p>
 
 ### Description
-This project was created with the purpose of testing and training my backend & frontend skills. Currenty there aren't many features and is not production ready.
+This project was created with the purpose of testing and training my backend & frontend skills. Currently, there aren't many features and isn't production ready.
 
 ### Toolkit
 - Spring Boot
@@ -29,6 +29,8 @@ This project was created with the purpose of testing and training my backend & f
 
 ### Pictures
 
-<img src="https://i.imgur.com/yEVGORL.png" alt="signin page">
-<img src="https://i.imgur.com/3OMqNoD.png" alt="signup page">
+<img src="https://i.imgur.com/d5dCIhN.png" alt="signin page">
+<img src="https://i.imgur.com/gVnMP3H.png" alt="signup page">
+<img src="https://i.imgur.com/WCpMHrt.png" alt="dashboard layout">
+<img src="https://i.imgur.com/BQj59fr.png" alt="new post page">
 <img src="https://i.imgur.com/6okaCmM.png" alt="home page">

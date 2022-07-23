@@ -1,12 +1,26 @@
 import { extendTheme } from '@chakra-ui/react';
-import { mode } from '@chakra-ui/theme-tools';
+import { mode, StyleFunctionProps } from '@chakra-ui/theme-tools';
 
 export default extendTheme({
   styles: {
     global: (props) => ({
       body: {
-        bg: mode('gray.100', 'gray.800')(props),
+        bgColor: mode('gray.100', 'rgb(34, 42, 55)')(props),
       },
     }),
+  },
+  components: {
+    Input: {
+      baseStyle: (props: StyleFunctionProps) => ({
+        field: {
+          bg: props.colorMode === 'light' ? 'gray.100' : 'blackAlpha.400',
+        },
+      }),
+      sizes: {},
+      variants: {},
+      defaultProps: {
+        variant: null, // null here
+      },
+    },
   },
 });

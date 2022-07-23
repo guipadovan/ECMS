@@ -15,7 +15,7 @@ const SocialButton = ({ children, label, href }) => {
 
 export default function Footer() {
   return (
-    <Box pt={5} bg={useColorModeValue('gray.100', 'gray.800')} color={useColorModeValue('gray.700', 'gray.200')}>
+    <Box pt={5} bg={'inherit'} color={useColorModeValue('gray.700', 'gray.200')}>
       <Container as={Stack} maxW={'6xl'} py={4} direction={{ base: 'column', md: 'row' }} spacing={4}
                  justify={{ base: 'center', md: 'space-between' }}
                  align={{ base: 'center', md: 'center' }}>

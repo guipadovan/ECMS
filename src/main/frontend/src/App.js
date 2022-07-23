@@ -1,9 +1,20 @@
 import routes from './routes';
 import { useRoutes } from 'react-router-dom';
-import { isAuthenticated } from './services/auth';
+import useAuth from './hooks/useAuth';
+import useRefreshToken from './hooks/useRefreshToken';
+import { useEffect } from 'react';
 
 export default function App() {
-  const routing = useRoutes(routes(isAuthenticated()));
+  const { auth } = useAuth();
+  const refresh = useRefreshToken();
+
+  useEffect(() => {
+    refresh().catch(() => {
+
+    });
+  }, []);
+
+  const routing = useRoutes(routes(auth?.user));
 
   return (
     <>
