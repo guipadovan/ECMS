@@ -39,7 +39,7 @@ jwt:
     secret_key: ecms8888888
     expiration:
       access: 5
-      refresh: 60
+      refresh: 1440
 
 config:
   email: "contato@exitius.com"

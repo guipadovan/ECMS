@@ -11,10 +11,7 @@ import com.guipadovan.ecms.service.EmailService;
 import com.guipadovan.ecms.service.utils.EmailValidator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseCookie;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -75,10 +72,19 @@ public class AuthController {
         AppUser appUser = appUserService.getUser(tokenHelper.getUsernameFromToken(token)).orElseThrow(() -> new IllegalStateException("User doesn't exist"));
 
         if (!tokenHelper.validateToken(token))
-            throw new IllegalStateException("Invalid token");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
 
         return ResponseEntity.ok(new AuthResponse(tokenHelper.createAccessToken(appUser)));
     }
+
+    @GetMapping(value = "/logout")
+    public ResponseEntity<?> logout() {
+        ResponseCookie refreshToken = ResponseCookie.from("jwt", "")
+                .httpOnly(true).path("/").maxAge(0).build();
+
+        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, refreshToken.toString()).build();
+    }
+
 
     @PostMapping(value = "/register", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> register(@RequestBody RegisterRequest registerRequest) {

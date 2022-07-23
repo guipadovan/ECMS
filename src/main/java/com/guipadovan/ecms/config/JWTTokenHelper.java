@@ -70,7 +70,7 @@ public class JWTTokenHelper {
             final String username = getUsernameFromToken(token);
             return (username != null && !isTokenExpired(token));
         } catch (Exception e) {
-            throw new BadCredentialsException("Invalid credentials");
+            return false;
         }
     }
 
