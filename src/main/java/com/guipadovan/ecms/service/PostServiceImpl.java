@@ -9,6 +9,8 @@ import com.guipadovan.ecms.repo.PostRepository;
 import com.guipadovan.ecms.repo.ReactionRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -110,27 +112,33 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Optional<Post> getPost(Long id) {
+        log.info("Fetching post with id {} from database", id);
         return postRepository.findById(id);
     }
 
     @Override
     public List<Post> getPostsByAuthor(String username) {
         AppUser appUser = appUserService.getUser(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        log.info("Fetching posts by author {} from database", username);
         return postRepository.findByAuthorIdOrderByPostedAtAsc(appUser.getId());
     }
 
     @Override
     public Optional<Reaction> getReaction(Long id) {
+        log.info("Fetching reaction {} from database", id);
         return reactionRepository.findById(id);
     }
 
     @Override
     public Optional<Reaction> getReactionByName(String name) {
+        log.info("Fetching reaction {} from database", name);
         return reactionRepository.findByName(name);
     }
 
     @Override
-    public List<Post> getPosts() {
-        return postRepository.findAll();
+    public Page<Post> getPosts(String title, int page, int size) {
+        log.info("Fetching posts for page {} of size {} from database", page, size);
+        return postRepository.findByTitleContaining(title, PageRequest.of(page, size));
     }
+
 }

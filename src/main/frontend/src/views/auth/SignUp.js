@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import * as Yup from 'yup';
-import { Field, Formik } from 'formik';
+import {Field, Formik} from 'formik';
 import AlertCard from '../../components/alert/AlertCard';
 import {
   Box,
@@ -18,7 +18,7 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import PasswordInput from '../../components/input/PasswordInput';
-import { NavLink } from 'react-router-dom';
+import {NavLink} from 'react-router-dom';
 import axios from '../../api/axios';
 
 export default function SignUp() {
@@ -86,8 +86,8 @@ export default function SignUp() {
         {alert.open ? (
           <Box mb={2}>
             <AlertCard type={alert.type} title={alert.title} closable={false} icon={true}
-                       description={alert.description} mb={4} />
-            <Divider />
+                       description={alert.description} mb={4}/>
+            <Divider/>
           </Box>
         ) : null}
         <Formik
@@ -126,9 +126,9 @@ export default function SignUp() {
               actions.setSubmitting(false);
               if (err && err.response) {
                 if (err.response.data.message.includes('Username'))
-                  actions.setErrors({ username: err.response.data.message });
+                  actions.setErrors({username: err.response.data.message});
                 else if (err.response.data.message.includes('Email'))
-                  actions.setErrors({ email: err.response.data.message });
+                  actions.setErrors({email: err.response.data.message});
                 else
                   errorAlert();
               } else
@@ -136,35 +136,35 @@ export default function SignUp() {
             });
           }}
         >
-          {({ handleSubmit, errors, touched, isSubmitting, isValid, dirty }) => (
+          {({handleSubmit, errors, touched, isSubmitting, isValid, dirty}) => (
             <form onSubmit={handleSubmit}>
               <VStack spacing={4}>
                 <FormControl isRequired isInvalid={errors.username && touched.username}>
                   <FormLabel>Username</FormLabel>
-                  <Field as={Input} bg={fieldBg} id='username' name='username' type='text' variant='filled' />
+                  <Field as={Input} bg={fieldBg} id='username' name='username' type='text' variant='filled'/>
                   <FormErrorMessage>{errors.username}</FormErrorMessage>
                 </FormControl>
                 <FormControl isRequired isInvalid={errors.email && touched.email}>
                   <FormLabel>Email</FormLabel>
-                  <Field as={Input} bg={fieldBg} id='email' name='email' type='email' variant='filled' />
+                  <Field as={Input} bg={fieldBg} id='email' name='email' type='email' variant='filled'/>
                   <FormErrorMessage>{errors.email}</FormErrorMessage>
                 </FormControl>
-                <Stack direction={{ base: 'column', lg: 'row' }} spacing={4} w='100%'>
+                <Stack direction={{base: 'column', lg: 'row'}} spacing={4} w='100%'>
                   <FormControl isRequired isInvalid={errors.password && touched.password}>
                     <FormLabel>Password</FormLabel>
-                    <PasswordInput id='password' name='password' bg={fieldBg} />
+                    <PasswordInput id='password' name='password' bg={fieldBg}/>
                     <FormErrorMessage textAlign={'left'}>{errors.password}</FormErrorMessage>
                   </FormControl>
                   <FormControl isRequired isInvalid={errors.confirmPassword && touched.confirmPassword}>
                     <FormLabel>Confirm Password</FormLabel>
-                    <PasswordInput id='confirmPassword' name='confirmPassword' bg={fieldBg} />
+                    <PasswordInput id='confirmPassword' name='confirmPassword' bg={fieldBg}/>
                     <FormErrorMessage>{errors.confirmPassword}</FormErrorMessage>
                   </FormControl>
                 </Stack>
                 <Stack spacing={10} pt={2} w='100%'>
                   <Button loadingText='Submitting' size='lg' m='2px' bg={'blue.400'} color={'white'} type='submit'
                           isLoading={isSubmitting}
-                          isDisabled={!isValid || !dirty} _hover={{ bg: 'blue.500' }}>
+                          isDisabled={!isValid || !dirty} _hover={{bg: 'blue.500'}}>
                     Sign up
                   </Button>
                 </Stack>

@@ -35,7 +35,7 @@ public class EcmsApplicationRunner implements CommandLineRunner {
         if (appUserService.getRole(masterRole).isEmpty())
             appUserService.saveRole(new Role(masterRole, List.of(Permission.values())));
         if (appUserService.getRole(defaultRole).isEmpty())
-            appUserService.saveRole(new Role(defaultRole, List.of(Permission.COMMENT, Permission.REACT)));
+            appUserService.saveRole(new Role(defaultRole, List.of(Permission.POST_COMMENT, Permission.POST_REACT)));
         if (appUserService.getUser(masterUserUsername).isEmpty()) {
             AppUser appUser = appUserService.saveUser(new AppUser(masterUserUsername, masterUserEmail, masterUserPassword, LocalDateTime.now())).orElseThrow();
             appUserService.enableUser(appUser.getUsername());

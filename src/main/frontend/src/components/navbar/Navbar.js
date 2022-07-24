@@ -16,18 +16,18 @@ import {
 } from '@chakra-ui/react';
 import SidebarResponsive from './SidebarResponsive';
 import React from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
-import { ColorModeSwitcher } from '../ColorModeSwitcher';
-import { FaUser } from 'react-icons/all';
+import {NavLink, useLocation} from 'react-router-dom';
+import {ColorModeSwitcher} from '../ColorModeSwitcher';
+import {FaUser} from 'react-icons/all';
 import routes from '../../routes';
 import MenuHeader from './MenuHeader';
 import useAuth from '../../hooks/useAuth';
 
 export default function Navbar(props) {
 
-  const { ...rest } = props;
+  const {...rest} = props;
 
-  const { auth } = useAuth();
+  const {auth} = useAuth();
 
   let location = useLocation();
   const activeRoute = (routeName) => {
@@ -54,8 +54,8 @@ export default function Navbar(props) {
         if (route.nav.nav === 'main' && nav === 'main')
           return (
             <NavLink to={route.path} key={route.name}>
-              <Button fontSize='md' ms='0px' px='0px' me={{ sm: '2px', md: '0px' }} color={textColor}
-                      variant='transparent-with-icon' leftIcon={<Icon as={route.nav.icon} color={'inherit'} />}
+              <Button fontSize='md' ms='0px' px='0px' me={{sm: '2px', md: '0px'}} color={textColor}
+                      variant='transparent-with-icon' leftIcon={<Icon as={route.nav.icon} color={'inherit'}/>}
                       iconSpacing={'3px'}
                       _after={{
                         content: `""`, position: 'absolute', width: '0', height: '3px', bg: 'none',
@@ -79,7 +79,7 @@ export default function Navbar(props) {
         else if (route.nav.nav === 'user' && nav === 'user' && ((loggedIn && auth.user) || (!loggedIn && !auth.user)))
           return (
             <MenuItem as={NavLink} to={route.path} key={route.name} pl={'20px'} pt={'0.3rem'} pb={'0.3rem'}>
-              <Icon as={route.nav.icon} boxSize={'18px'} mr={'5px'} align={'center'} />{route.name}
+              <Icon as={route.nav.icon} boxSize={'18px'} mr={'5px'} align={'center'}/>{route.name}
             </MenuItem>
           );
       }
@@ -92,13 +92,13 @@ export default function Navbar(props) {
     <Flex position='fixed' top='16px' left='50%' transform='translate(-50%, 0px)' background={navbarBg}
           boxShadow={navbarShadow} borderRadius='15px' px='16px' py='22px' mx='auto' width='1044px'
           maxW='90%' alignItems='center'>
-      <Flex w='100%' justifyContent={{ sm: 'start', lg: 'space-between' }}>
+      <Flex w='100%' justifyContent={{sm: 'start', lg: 'space-between'}}>
         {brand}
-        <Box ms={{ base: 'auto', lg: '0px' }} display={{ base: 'flex', lg: 'none' }}>
+        <Box ms={{base: 'auto', lg: '0px'}} display={{base: 'flex', lg: 'none'}}>
           <SidebarResponsive routes={routes()} {...rest} />
         </Box>
 
-        <HStack display={{ base: 'none', md: 'flex' }} spacing={'5'}>
+        <HStack display={{base: 'none', md: 'flex'}} spacing={'5'}>
           {createLinks(routes(), 'main')}
         </HStack>
 
@@ -111,7 +111,7 @@ export default function Navbar(props) {
             <MenuList bg={useColorModeValue('white', 'gray.800')} alignItems={'center'} fontSize={'sm'}
                       fontWeight={'semibold'} border={0} pt={0}
                       boxShadow={'1px 1px 10px 1px rgba(0, 0, 0, 0.25)'}>
-              <MenuHeader />
+              <MenuHeader/>
               <MenuGroup title={'Account'} textAlign={'left'} mb={'0'} fontSize={'15px'}>
                 {createLinks(routes(), 'user')}
               </MenuGroup>

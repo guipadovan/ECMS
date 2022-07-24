@@ -5,6 +5,7 @@ import com.guipadovan.ecms.domain.blog.Post;
 import com.guipadovan.ecms.domain.blog.PostComment;
 import com.guipadovan.ecms.domain.blog.PostReaction;
 import com.guipadovan.ecms.domain.blog.Reaction;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 import java.util.Optional;
@@ -29,6 +30,6 @@ public interface PostService {
 
     Optional<Reaction> getReactionByName(String name);
 
-    List<Post> getPosts();
+    Page<Post> getPosts(String title, int page, int size);
 
 }

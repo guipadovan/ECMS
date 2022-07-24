@@ -8,6 +8,7 @@ import com.guipadovan.ecms.domain.blog.PostComment;
 import com.guipadovan.ecms.domain.blog.PostReaction;
 import com.guipadovan.ecms.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +16,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("api/v1/post")
@@ -32,7 +33,7 @@ public class PostController {
     @PostMapping(value = "/new", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> newPost(@AuthenticationPrincipal AppUser appUser, @RequestBody PostRequest postRequest) {
 
-        if (!appUser.hasPermission(Permission.POST) || appUser.isLocked())
+        if (!appUser.hasPermission(Permission.ACCESS_ADD_POST) || appUser.isLocked())
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("No permission");
 
         postService.savePost(new Post(appUser, postRequest.title(), postRequest.subtitle(),
@@ -41,9 +42,9 @@ public class PostController {
         return ResponseEntity.ok("\"" + postRequest.text() + "\" posted successfully");
     }
 
-    @GetMapping("/all")
-    public ResponseEntity<List<Post>> getPosts() {
-        return ResponseEntity.ok(postService.getPosts());
+    @GetMapping("/posts")
+    public ResponseEntity<Page<Post>> getPosts(@RequestParam Optional<String> title, @RequestParam Optional<Integer> page, @RequestParam Optional<Integer> size) {
+        return ResponseEntity.ok(postService.getPosts(title.orElse(""), page.orElse(0), size.orElse(10)));
     }
 
     @GetMapping("/{id}")
@@ -54,7 +55,7 @@ public class PostController {
     @PutMapping(value = "/{id}/update", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> updatePost(@AuthenticationPrincipal AppUser appUser, @PathVariable("id") long postId, @RequestBody PostRequest postRequest) {
 
-        if (!appUser.hasPermission(Permission.EDIT) || appUser.isLocked())
+        if (!appUser.hasPermission(Permission.POST_EDIT) || appUser.isLocked())
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("No permission");
 
         postService.updatePost(postId, appUser, postRequest.title(),
@@ -66,7 +67,7 @@ public class PostController {
     @PostMapping(value = "/{id}/reaction", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> newReaction(@AuthenticationPrincipal AppUser appUser, @PathVariable("id") long postId, @RequestParam("reaction") long reactionId) {
 
-        if (!appUser.hasPermission(Permission.REACT) || appUser.isLocked())
+        if (!appUser.hasPermission(Permission.POST_REACT) || appUser.isLocked())
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("No permission");
 
         postService.getPost(postId).ifPresentOrElse(post ->
@@ -82,7 +83,7 @@ public class PostController {
     @PostMapping(value = "/{id}/comment", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> newComment(@AuthenticationPrincipal AppUser appUser, @PathVariable("id") long postId, @RequestParam("comment") String comment) {
 
-        if (!appUser.hasPermission(Permission.COMMENT) || appUser.isLocked())
+        if (!appUser.hasPermission(Permission.POST_COMMENT) || appUser.isLocked())
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("No permission");
 
         postService.getPost(postId).ifPresentOrElse(post ->

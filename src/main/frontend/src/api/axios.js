@@ -12,4 +12,4 @@ const apiPrivate = axios.create({
 });
 
 export default apiPrivate;
-export { api };
+export {api};

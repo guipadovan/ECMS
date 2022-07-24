@@ -58,7 +58,7 @@ public class AuthController {
 
             // TODO set secure cookie
             ResponseCookie refreshToken = ResponseCookie.from("jwt", tokenHelper.createRefreshToken(appUser))
-                    .httpOnly(true).path("/").maxAge(tokenHelper.getRefreshExpiresIn() * 60L).build();
+                    .httpOnly(true).path("/").maxAge((authRequest.rememberMe() ? 43200 : tokenHelper.getRefreshExpiresIn()) * 60L).build();
 
             return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, refreshToken.toString())
                     .body(new AuthResponse(tokenHelper.createAccessToken(appUser)));

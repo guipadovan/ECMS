@@ -1,4 +1,4 @@
 package com.guipadovan.ecms.api.request;
 
-public record AuthRequest(String username, String password) {
+public record AuthRequest(String username, String password, boolean rememberMe) {
 }

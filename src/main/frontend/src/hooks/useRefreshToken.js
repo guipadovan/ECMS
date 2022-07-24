@@ -3,7 +3,7 @@ import axios from '../api/axios';
 import jwtDecode from 'jwt-decode';
 
 const useRefreshToken = () => {
-  const { setAuth } = useAuth();
+  const {setAuth} = useAuth();
 
   return async () => {
     const res = await axios.get('/auth/refresh', {
@@ -12,7 +12,7 @@ const useRefreshToken = () => {
 
     setAuth(() => {
       console.log(jwtDecode(res.data.token));
-      return { user: jwtDecode(res.data.token), token: res.data.token };
+      return {user: jwtDecode(res.data.token), token: res.data.token};
     });
 
     return res.data.token;

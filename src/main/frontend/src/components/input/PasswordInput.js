@@ -1,9 +1,9 @@
-import { Field } from 'formik';
-import { Button, Input, InputGroup, InputRightElement } from '@chakra-ui/react';
-import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
-import { useState } from 'react';
+import {Field} from 'formik';
+import {Button, Input, InputGroup, InputRightElement} from '@chakra-ui/react';
+import {ViewIcon, ViewOffIcon} from '@chakra-ui/icons';
+import {useState} from 'react';
 
-export default function PasswordInput({ id, name, ...rest }) {
+export default function PasswordInput({id, name, ...rest}) {
 
   const [viewToggle, setViewToggle] = useState(false);
 
@@ -15,7 +15,7 @@ export default function PasswordInput({ id, name, ...rest }) {
         <Button variant={'ghost'} onClick={() => {
           setViewToggle(!viewToggle);
         }}>
-          {viewToggle ? <ViewIcon /> : <ViewOffIcon />}
+          {viewToggle ? <ViewIcon/> : <ViewOffIcon/>}
         </Button>
       </InputRightElement>
     </InputGroup>

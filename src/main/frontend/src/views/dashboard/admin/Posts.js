@@ -1,9 +1,21 @@
-import { HStack } from '@chakra-ui/react';
+import {api} from "../../../api/axios";
+import Card from "../../../components/card/Card";
 
 export default function Posts() {
+
+  api.get('/post/posts', {
+    params: {
+      title: '',
+      page: 0,
+      size: 10,
+    }
+  }).then(res => {
+    console.log(res);
+  });
+
   return (
-    <HStack spacing={2}>
-      teste
-    </HStack>
+    <Card label={'Posts'}>
+
+    </Card>
   );
 }

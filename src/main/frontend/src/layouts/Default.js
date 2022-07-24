@@ -1,8 +1,8 @@
 import React from 'react';
-import { Box, Portal } from '@chakra-ui/react';
+import {Box, Portal} from '@chakra-ui/react';
 import Footer from '../components/Footer';
 import Navbar from '../components/navbar/Navbar';
-import { Outlet } from 'react-router';
+import {Outlet} from 'react-router';
 
 export default function DefaultLayout() {
 
@@ -10,10 +10,10 @@ export default function DefaultLayout() {
   return (
     <Box minH={'100vh'} align={'center'} justify={'center'} w={'100%'} ref={navRef}>
       <Portal containerRef={navRef}>
-        <Navbar />
+        <Navbar/>
       </Portal>
       <Box w='100%' pt={'125px'}>
-        <Outlet />
+        <Outlet/>
       </Box>
       <Box px='24px' mx='auto' width='1044px' maxW='100%'>
         <Footer></Footer>

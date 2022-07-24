@@ -18,13 +18,13 @@ import {
   useColorModeValue,
   useDisclosure,
 } from '@chakra-ui/react';
-import { FaHome, FaUser } from 'react-icons/all';
-import { ColorModeSwitcher } from '../components/ColorModeSwitcher';
-import { Outlet, useLocation } from 'react-router';
+import {FaHome, FaUser} from 'react-icons/all';
+import {ColorModeSwitcher} from '../components/ColorModeSwitcher';
+import {Outlet, useLocation} from 'react-router';
 import DashboardSidebar from '../components/navbar/DashboardSidebar';
-import { ChevronRightIcon, HamburgerIcon } from '@chakra-ui/icons';
+import {ChevronRightIcon, HamburgerIcon} from '@chakra-ui/icons';
 import routes from '../routes';
-import { NavLink } from 'react-router-dom';
+import {NavLink} from 'react-router-dom';
 import MenuHeader from '../components/navbar/MenuHeader';
 
 export default function DashboardLayout() {
@@ -55,34 +55,34 @@ export default function DashboardLayout() {
   };
 
   return (
-    <Box minH={'100vh'} align={'center'} justify={'center'} w={'100%'}>
-      <DashboardSidebar m={'4'} borderRadius={'lg'} px={'16px'} py={'8px'} display={{ base: 'none', md: 'unset' }}
-                        boxShadow={'1px 1px 8px rgba(0, 0, 0, 0.15)'} w='240px' h={'95%'} borderRightWidth={'0'} />
+    <Box minH={'97vh'} align={'center'} justify={'center'} w={'100%'}>
+      <DashboardSidebar m={'4'} borderRadius={'lg'} px={'16px'} py={'8px'} display={{base: 'none', md: 'unset'}}
+                        boxShadow={'1px 1px 8px rgba(0, 0, 0, 0.15)'} w='240px' h={'95%'} borderRightWidth={'0'}/>
       <Drawer isOpen={sidebar.isOpen} onClose={sidebar.onClose} placement='left'>
-        <DrawerOverlay />
+        <DrawerOverlay/>
         <DrawerContent maxW='250px' px='1rem'>
-          <DashboardSidebar px={'16px'} py={'8px'} w='full' borderRight='none' />
+          <DashboardSidebar px={'16px'} py={'8px'} w='full' borderRight='none'/>
         </DrawerContent>
       </Drawer>
       <Box w='100%'>
-        <Box ml={{ base: 0, md: '256px' }} transition='.3s ease'>
+        <Box ml={{base: 0, md: '256px'}} transition='.3s ease'>
           <Flex align='center' justify='space-between' w='96%' px='4' bg='white'
                 boxShadow={'1px 1px 8px rgba(0, 0, 0, 0.15)'}
-                _dark={{ bg: 'gray.800' }} m={'16px'} borderRadius={'6px'} h='14'>
+                _dark={{bg: 'gray.800'}} m={'16px'} borderRadius={'6px'} h='14'>
 
-            <Breadcrumbs breadcrumbs={createBreadcrumbs(routes())} />
+            <Breadcrumbs breadcrumbs={createBreadcrumbs(routes())}/>
 
             <Flex align='center'>
               <IconButton size='md' fontSize='lg' aria-label={`Menu`} variant='ghost'
-                          display={{ base: 'inline-flex', md: 'none' }}
-                          color='current' onClick={sidebar.onOpen} icon={<HamburgerIcon />} />
+                          display={{base: 'inline-flex', md: 'none'}}
+                          color='current' onClick={sidebar.onOpen} icon={<HamburgerIcon/>}/>
               <ColorModeSwitcher></ColorModeSwitcher>
-              <UserMenu />
+              <UserMenu/>
             </Flex>
           </Flex>
 
           <Box px='16px' mx='auto' mb={'16px'} width='1044px' maxW='100%' align={'start'}>
-            <Outlet />
+            <Outlet/>
             <Text>© ECMS. All rights reserved</Text>
           </Box>
         </Box>
@@ -99,11 +99,11 @@ function UserMenu() {
     <MenuList bg={useColorModeValue('white', 'gray.800')} alignItems={'center'} fontSize={'sm'}
               fontWeight={'semibold'} border={0} pt={0}
               boxShadow={'1px 1px 10px 1px rgba(0, 0, 0, 0.25)'}>
-      <MenuHeader />
+      <MenuHeader/>
       <Box pt={'8px'}>
         <MenuGroup textAlign={'left'} mb={'0'} fontSize={'15px'}>
           <MenuItem as={NavLink} to='/home/' key='home' pl={'20px'} pt={'0.3rem'} pb={'0.3rem'}>
-            <Icon as={FaHome} boxSize={'18px'} mr={'5px'} align={'center'} />Home
+            <Icon as={FaHome} boxSize={'18px'} mr={'5px'} align={'center'}/>Home
           </MenuItem>
         </MenuGroup>
       </Box>
@@ -112,7 +112,7 @@ function UserMenu() {
 }
 
 function Breadcrumbs(props: { breadcrumbs: any }) {
-  return <Breadcrumb fontWeight='medium' fontSize='sm' separator={<ChevronRightIcon color='gray.500' />}>
+  return <Breadcrumb fontWeight='medium' fontSize='sm' separator={<ChevronRightIcon color='gray.500'/>}>
     {props.breadcrumbs}
   </Breadcrumb>;
 }

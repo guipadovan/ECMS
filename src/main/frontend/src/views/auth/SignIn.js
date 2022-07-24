@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import * as Yup from 'yup';
-import { Field, Formik } from 'formik';
+import {Field, Formik} from 'formik';
 import AlertCard from '../../components/alert/AlertCard';
 import {
   Box,
@@ -20,15 +20,15 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import PasswordInput from '../../components/input/PasswordInput';
-import { NavLink } from 'react-router-dom';
-import { useNavigate } from 'react-router';
+import {NavLink} from 'react-router-dom';
+import {useNavigate} from 'react-router';
 import jwtDecode from 'jwt-decode';
 import useAuth from '../../hooks/useAuth';
-import { api } from '../../api/axios';
+import {api} from '../../api/axios';
 
 export default function SignIn() {
 
-  const { setAuth } = useAuth();
+  const {setAuth} = useAuth();
   const navigate = useNavigate();
   const [alert, setAlert] = useState({
     open: false,
@@ -72,20 +72,22 @@ export default function SignIn() {
         {alert.open ? (
           <Box mb={2}>
             <AlertCard type={alert.type} title={alert.title} closable={false} icon={true}
-                       description={alert.description} mb={4} />
-            <Divider />
+                       description={alert.description} mb={4}/>
+            <Divider/>
           </Box>
         ) : null}
         <Formik
           initialValues={{
             username: '',
             password: '',
+            rememberMe: true,
           }}
           validationSchema={validate}
           onSubmit={(values, actions) => {
             api.post('/auth/login', {
               username: values.username,
               password: values.password,
+              rememberMe: values.rememberMe,
             }, {
               withCredentials: true,
             }).then(res => {
@@ -112,28 +114,28 @@ export default function SignIn() {
             });
           }}
         >
-          {({ handleSubmit, errors, touched, isSubmitting, isValid, dirty }) => (
+          {({handleSubmit, errors, touched, isSubmitting, isValid, dirty}) => (
             <form onSubmit={handleSubmit}>
               <VStack spacing={4}>
                 <FormControl isRequired isInvalid={errors.username && touched.username}>
                   <FormLabel>Username</FormLabel>
-                  <Field as={Input} bg={fieldBg} id='username' name='username' type='text' variant='filled' />
+                  <Field as={Input} bg={fieldBg} id='username' name='username' type='text' variant='filled'/>
                   <FormErrorMessage>{errors.username}</FormErrorMessage>
                 </FormControl>
                 <FormControl isRequired isInvalid={errors.password && touched.password}>
                   <FormLabel>Password</FormLabel>
-                  <PasswordInput bg={fieldBg} id='password' name='password' />
+                  <PasswordInput bg={fieldBg} id='password' name='password'/>
                   <FormErrorMessage>{errors.password}</FormErrorMessage>
                 </FormControl>
                 <HStack justify='space-between' w={'100%'}>
-                  <Checkbox defaultChecked>Remember me</Checkbox>
+                  <Field as={Checkbox} id='rememberMe' name='rememberMe' defaultChecked>Remember me</Field>
                   <Button variant='link' colorScheme='blue' size='sm'>
                     Forgot password?
                   </Button>
                 </HStack>
                 <Stack spacing={10} pt={2} w='100%'>
                   <Button loadingText='Submitting' size='lg' m='2px' bg={'blue.400'} color={'white'} type='submit'
-                          isLoading={isSubmitting} isDisabled={!isValid || !dirty} _hover={{ bg: 'blue.500' }}>
+                          isLoading={isSubmitting} isDisabled={!isValid || !dirty} _hover={{bg: 'blue.500'}}>
                     Sign in
                   </Button>
                 </Stack>
