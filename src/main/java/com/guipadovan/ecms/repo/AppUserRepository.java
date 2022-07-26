@@ -1,6 +1,8 @@
 package com.guipadovan.ecms.repo;
 
 import com.guipadovan.ecms.domain.AppUser;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -27,5 +29,7 @@ public interface AppUserRepository extends JpaRepository<AppUser, Long> {
     @Query("update AppUser a set a.enabled = ?1 where a.username = ?2")
     void updateEnabledByUsername(boolean enabled, String username);
 
+    @Query("select a from AppUser a where a.username like concat('%', ?1, '%')")
+    Page<AppUser> findByUsernameContaining(String username, Pageable pageable);
 
 }

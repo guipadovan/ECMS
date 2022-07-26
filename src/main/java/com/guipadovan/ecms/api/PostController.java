@@ -39,7 +39,7 @@ public class PostController {
         postService.savePost(new Post(appUser, postRequest.title(), postRequest.subtitle(),
                 postRequest.text(), LocalDateTime.now(), postRequest.locked()));
 
-        return ResponseEntity.ok("\"" + postRequest.text() + "\" posted successfully");
+        return ResponseEntity.ok("Post \"" + postRequest.title() + "\" posted successfully");
     }
 
     @GetMapping("/posts")
@@ -52,6 +52,29 @@ public class PostController {
         return ResponseEntity.of(postService.getPost(postId));
     }
 
+    @PutMapping("/{id}/switch-lock")
+    public ResponseEntity<String> switchPostLock(@AuthenticationPrincipal AppUser appUser, @PathVariable("id") long postId) {
+
+        if (!appUser.hasPermission(Permission.POST_LOCK) || appUser.isLocked())
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("No permission");
+
+        postService.switchLockedPost(postId, appUser);
+
+        return ResponseEntity.ok("Post lock switched successfully");
+    }
+
+    @DeleteMapping("/{id}/delete")
+    public ResponseEntity<String> deletePost(@AuthenticationPrincipal AppUser appUser, @PathVariable("id") long postId) {
+
+        if (!appUser.hasPermission(Permission.POST_DELETE) || appUser.isLocked())
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("No permission");
+
+        postService.deletePost(postId);
+
+        return ResponseEntity.ok("Post deleted successfully");
+    }
+
+
     @PutMapping(value = "/{id}/update", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> updatePost(@AuthenticationPrincipal AppUser appUser, @PathVariable("id") long postId, @RequestBody PostRequest postRequest) {
 
@@ -61,7 +84,7 @@ public class PostController {
         postService.updatePost(postId, appUser, postRequest.title(),
                 postRequest.subtitle(), postRequest.text(), postRequest.locked());
 
-        return ResponseEntity.ok("\"" + postRequest.text() + "\" updated successfully");
+        return ResponseEntity.ok("Post \"" + postRequest.text() + "\" updated successfully");
     }
 
     @PostMapping(value = "/{id}/reaction", produces = MediaType.APPLICATION_JSON_VALUE)

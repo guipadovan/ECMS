@@ -25,7 +25,7 @@ const routes = (isLoggedIn) => [
         element: <Outlet/>,
         loggedIn: true,
         children: [
-          {path: '/app/posts/', element: <Posts/>, name: 'Posts', nav: {nav: 'admin', icon: FaNewspaper}},
+          {path: '/app/posts', element: <Posts/>, name: 'Posts', nav: {nav: 'admin', icon: FaNewspaper}},
           {path: '/app/posts/new', element: <AddPost/>, name: 'New Post', nav: {nav: 'admin', icon: FaNewspaper}},
         ],
       },

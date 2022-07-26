@@ -83,7 +83,9 @@ export default function DashboardLayout() {
 
           <Box px='16px' mx='auto' mb={'16px'} width='1044px' maxW='100%' align={'start'}>
             <Outlet/>
-            <Text>© ECMS. All rights reserved</Text>
+            <Box mt={4} ml={8}>
+              <Text>© ECMS. All rights reserved</Text>
+            </Box>
           </Box>
         </Box>
       </Box>

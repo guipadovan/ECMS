@@ -54,20 +54,23 @@ const RichTextArea = ({isInvalid, name, ...rest}) => {
       });
   }, [value]);
 
-  const handleclick = (e) => {
+  const handleClick = (e) => {
     e.stopPropagation();
     ReactEditor.focus(editor);
-    if (!touched)
-      setTouched(true, false);
   };
 
+  const handleBlur = () => {
+    if (!touched)
+      setTouched(true);
+  }
+
   return (
-    <Box onClick={(e) => handleclick(e)} borderWidth={'0'} borderRadius={'6px'}
+    <Box onClick={(e) => handleClick(e)} onBlur={() => handleBlur()} borderWidth={'0'} borderRadius={'6px'}
          bg={useColorModeValue('gray.100', 'blackAlpha.400')}
          border={'2px solid'} borderColor={error && touched ? 'red.300' : 'transparent'}
          _hover={{bg: useColorModeValue('gray.200', 'whiteAlpha.100')}}
          _focusWithin={{borderColor: '#63b3ed', bg: 'transparent'}} transition={'0.3s ease'}>
-      <Slate editor={editor} value={value} onChange={(v) => setValue(v)} {...rest}>
+      <Slate editor={editor} {...rest} value={value} onChange={(v) => setValue(v)}>
         <HStack padding={'5px 5px'} spacing={'5px'} wrap={'wrap'} bg={'blackAlpha.100'}>
           <MarkButton format='bold' icon={<MdFormatBold/>}/>
           <MarkButton format='italic' icon={<MdFormatItalic/>}/>
@@ -83,9 +86,8 @@ const RichTextArea = ({isInvalid, name, ...rest}) => {
           <BlockButton format='right' icon={<MdFormatAlignRight/>}/>
           <BlockButton format='justify' icon={<MdFormatAlignJustify/>}/>
         </HStack>
-        <Box padding={'15px 10px'}>
-          <Editable renderElement={renderElement} renderLeaf={renderLeaf} spellCheck style={{minHeight: '150px'}}/>
-        </Box>
+        <Editable renderElement={renderElement} renderLeaf={renderLeaf} spellCheck
+                  style={{minHeight: '150px', padding: '15px 10px'}}/>
       </Slate>
     </Box>
   );

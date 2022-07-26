@@ -3,6 +3,8 @@ package com.guipadovan.ecms.service;
 import com.guipadovan.ecms.domain.AppUser;
 import com.guipadovan.ecms.domain.ConfirmationToken;
 import com.guipadovan.ecms.domain.Role;
+import com.guipadovan.ecms.domain.blog.Post;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;
@@ -32,6 +34,5 @@ public interface AppUserService extends UserDetailsService {
 
     Optional<ConfirmationToken> getConfirmationToken(String token);
 
-    // TODO page system
-    List<AppUser> getUsers();
+    Page<AppUser> getUsers(String name, int page, int size);
 }

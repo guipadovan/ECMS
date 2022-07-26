@@ -4,6 +4,7 @@ import com.guipadovan.ecms.domain.AppUser;
 import com.guipadovan.ecms.domain.Permission;
 import com.guipadovan.ecms.domain.Role;
 import com.guipadovan.ecms.service.AppUserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -26,6 +27,7 @@ public class EcmsApplicationRunner implements CommandLineRunner {
     @Value("${config.default-role}")
     private String defaultRole;
 
+    @Autowired
     public EcmsApplicationRunner(AppUserService appUserService) {
         this.appUserService = appUserService;
     }

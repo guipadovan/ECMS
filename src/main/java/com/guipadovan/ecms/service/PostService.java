@@ -18,6 +18,10 @@ public interface PostService {
 
     void updatePost(Long id, AppUser updatedBy, String title, String subtitle, String text, boolean locked);
 
+    void deletePost(Long id);
+
+    void switchLockedPost(Long id, AppUser updatedBy);
+
     void addPostReaction(Long postId, PostReaction postReaction);
 
     void addPostComment(Long postId, PostComment postComment);

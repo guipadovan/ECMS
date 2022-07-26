@@ -5,9 +5,24 @@ export default extendTheme({
   styles: {
     global: (props) => ({
       body: {
+        overflowX: 'hidden',
+        overflowY: 'overlay',
         bgColor: mode('gray.100', 'rgb(34, 42, 55)')(props),
-        marginRight: '8px',
+        marginRight: '0px',
+        '::-webkit-scrollbar': {
+          width: '8px',
+        },
+        '::-webkit-scrollbar-track': {
+          my: '1px',
+        },
+        '::-webkit-scrollbar-thumb': {
+          bg: mode('gray.100', 'gray.900')(props),
+          borderRadius: '5vw',
+          border: '2px solid',
+          borderColor: mode('white', 'rgb(34, 42, 55)')(props),
+        }
       },
+
     }),
   },
   components: {
@@ -20,7 +35,7 @@ export default extendTheme({
       sizes: {},
       variants: {},
       defaultProps: {
-        variant: null, // null here
+        variant: null,
       },
     },
   },

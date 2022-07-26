@@ -11,7 +11,6 @@ const useRefreshToken = () => {
     });
 
     setAuth(() => {
-      console.log(jwtDecode(res.data.token));
       return {user: jwtDecode(res.data.token), token: res.data.token};
     });
 

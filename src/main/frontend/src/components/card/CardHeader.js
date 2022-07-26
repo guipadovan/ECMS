@@ -2,7 +2,7 @@ import {Button, Heading, HStack} from "@chakra-ui/react";
 import {FaArrowLeft, FaInfo} from "react-icons/all";
 import {useNavigate} from "react-router";
 
-const CardHeader = ({label}) => {
+const CardHeader = ({label, handleBackClick}) => {
 
   const navigate = useNavigate();
 
@@ -17,7 +17,8 @@ const CardHeader = ({label}) => {
           Help
         </Button>
         <Button colorScheme="blue" size={{base: "sm", sm: "md"}} leftIcon={<FaArrowLeft/>} bg={"blue.400"}
-                color={"white"} _hover={{bg: "blue.500"}} borderRadius={"5px"} onClick={() => navigate(-1)}>
+                color={"white"} _hover={{bg: "blue.500"}} borderRadius={"5px"}
+                onClick={handleBackClick ? handleBackClick : () => navigate(-1)}>
           Back
         </Button>
       </HStack>

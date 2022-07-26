@@ -45,8 +45,6 @@ public class PostServiceImpl implements PostService {
         else if (post.getText() == null)
             throw new IllegalStateException("Post body can't be null");
 
-        // TODO check if has permission
-
         log.info("Saving new post {} by {} to the database", post.getTitle(), post.getAuthor().getUsername());
         return Optional.of(postRepository.save(post));
     }
@@ -56,8 +54,6 @@ public class PostServiceImpl implements PostService {
 
         if (reaction.getName() == null)
             throw new IllegalStateException("Reaction name can't be null");
-
-        // TODO check if has permission
 
         log.info("Saving new reaction {} to the database", reaction.getName());
         return Optional.of(reactionRepository.save(reaction));
@@ -77,10 +73,30 @@ public class PostServiceImpl implements PostService {
             post.setSubtitle(subtitle);
             post.setText(text);
             post.setUpdatedAt(LocalDateTime.now());
+            post.setLastUpdatedBy(updatedBy);
             post.setLocked(locked);
         }, () -> {
             throw new NullPointerException("Post not found");
         });
+    }
+
+    @Override
+    public void deletePost(Long id) {
+        Post post = getPost(id).orElseThrow(() -> new NullPointerException("Post not found"));
+
+        log.info("Deleting post {}", post.getTitle());
+        postRepository.delete(post);
+    }
+
+    @Override
+    public void switchLockedPost(Long id, AppUser updatedBy) {
+        Post post = getPost(id).orElseThrow(() -> new NullPointerException("Post not found"));
+
+        log.info("{} post {} by {}", (post.isLocked() ? "Unlocking" : "Locking"),post.getTitle(),
+                updatedBy.getUsername());
+
+        post.setLastUpdatedBy(updatedBy);
+        post.setLocked(!post.isLocked());
     }
 
     @Override

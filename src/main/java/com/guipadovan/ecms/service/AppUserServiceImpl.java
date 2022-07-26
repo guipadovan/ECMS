@@ -9,6 +9,8 @@ import com.guipadovan.ecms.repo.ConfirmationTokenRepository;
 import com.guipadovan.ecms.repo.RoleRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -130,8 +132,8 @@ public class AppUserServiceImpl implements AppUserService {
     }
 
     @Override
-    public List<AppUser> getUsers() {
-        log.info("Fetching all users from database");
-        return appUserRepository.findAll();
+    public Page<AppUser> getUsers(String name, int page, int size) {
+        log.info("Fetching users for page {} of size {} from database", page, size);
+        return appUserRepository.findByUsernameContaining(name, PageRequest.of(page, size));
     }
 }
