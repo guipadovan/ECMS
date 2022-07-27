@@ -69,10 +69,11 @@ public class AuthController {
 
     @GetMapping(value = "/refresh")
     public ResponseEntity<?> refreshToken(@CookieValue(value = "jwt") String token) {
-        AppUser appUser = appUserService.getUser(tokenHelper.getUsernameFromToken(token)).orElseThrow(() -> new IllegalStateException("User doesn't exist"));
 
         if (!tokenHelper.validateToken(token))
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
+
+        AppUser appUser = appUserService.getUser(tokenHelper.getUsernameFromToken(token)).orElseThrow(() -> new IllegalStateException("User doesn't exist"));
 
         return ResponseEntity.ok(new AuthResponse(tokenHelper.createAccessToken(appUser)));
     }
