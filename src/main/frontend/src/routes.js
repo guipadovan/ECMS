@@ -9,6 +9,7 @@ import Posts from './views/dashboard/admin/Posts';
 import Home from './views/Home';
 import {BsBoxArrowInRight, FaCog, FaHome, FaNewspaper, FaShoppingCart, FaUserAlt, FaUserPlus} from 'react-icons/all';
 import DashboardLayout from './layouts/Dashboard';
+import Post from "./views/Post";
 
 const routes = (isLoggedIn) => [
   {
@@ -38,17 +39,26 @@ const routes = (isLoggedIn) => [
     children: [
       {path: '/home', element: <Home/>, name: 'Home', nav: {nav: 'main', icon: FaHome}},
       {path: '/store', element: <Home/>, name: 'Store', nav: {nav: 'main', icon: FaShoppingCart}},
+      {path: '/post/:id', element: <Post/>,},
+      {path: '/*', element: <Navigate to='/home'/>},
+    ],
+  },
+  {
+    path: '/auth',
+    element: <DefaultLayout disableHeader={true}/>,
+    loggedIn: false,
+    children: [
       {
-        path: '/signin',
+        path: '/auth/signin',
         element: !isLoggedIn ? <SignIn/> : <Navigate to='/home'/>, name: 'Sign In',
         nav: {nav: 'user', icon: BsBoxArrowInRight},
       },
       {
-        path: '/signup',
+        path: '/auth/signup',
         element: !isLoggedIn ? <SignUp/> : <Navigate to='/home'/>, name: 'Sign Up',
         nav: {nav: 'user', icon: FaUserPlus},
       },
-      {path: '/*', element: <Navigate to='/home'/>},
+      {path: '/auth/', element: <Navigate to='/home'/>},
     ],
   },
 ];

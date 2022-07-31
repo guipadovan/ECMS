@@ -1,5 +1,6 @@
 package com.guipadovan.ecms.api;
 
+import com.guipadovan.ecms.api.request.CommentRequest;
 import com.guipadovan.ecms.api.request.PostRequest;
 import com.guipadovan.ecms.domain.AppUser;
 import com.guipadovan.ecms.domain.Permission;
@@ -31,15 +32,15 @@ public class PostController {
     }
 
     @PostMapping(value = "/new", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> newPost(@AuthenticationPrincipal AppUser appUser, @RequestBody PostRequest postRequest) {
+    public ResponseEntity<?> newPost(@AuthenticationPrincipal AppUser appUser, @RequestBody PostRequest postRequest) {
 
         if (!appUser.hasPermission(Permission.ACCESS_ADD_POST) || appUser.isLocked())
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("No permission");
 
-        postService.savePost(new Post(appUser, postRequest.title(), postRequest.subtitle(),
+        Optional<Post> post = postService.savePost(new Post(appUser, postRequest.title(), postRequest.subtitle(),
                 postRequest.text(), LocalDateTime.now(), postRequest.locked()));
 
-        return ResponseEntity.ok("Post \"" + postRequest.title() + "\" posted successfully");
+        return ResponseEntity.of(post);
     }
 
     @GetMapping("/posts")
@@ -104,16 +105,25 @@ public class PostController {
     }
 
     @PostMapping(value = "/{id}/comment", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> newComment(@AuthenticationPrincipal AppUser appUser, @PathVariable("id") long postId, @RequestParam("comment") String comment) {
+    public ResponseEntity<String> newComment(@AuthenticationPrincipal AppUser appUser, @PathVariable("id") long postId, @RequestBody CommentRequest commentRequest) {
 
         if (!appUser.hasPermission(Permission.POST_COMMENT) || appUser.isLocked())
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("No permission");
 
-        postService.getPost(postId).ifPresentOrElse(post ->
-                postService.addPostComment(post.getId(), new PostComment(appUser,
-                        comment, LocalDateTime.now())), () -> {
-            throw new NullPointerException("Post not found");
-        });
+        if (commentRequest.comment().replaceAll(" ", "").equalsIgnoreCase(""))
+            throw new IllegalStateException("Comment cannot be empty");
+
+        postService.getPost(postId).ifPresentOrElse(
+                post -> {
+                    if (post.isLocked())
+                        throw new IllegalStateException("Post \"" + post.getTitle() + "\" is locked");
+
+                    postService.addPostComment(post.getId(), new PostComment(appUser,
+                            commentRequest.comment(), LocalDateTime.now()));
+                },
+                () -> {
+                    throw new NullPointerException("Post not found");
+                });
 
         return ResponseEntity.ok().build();
     }

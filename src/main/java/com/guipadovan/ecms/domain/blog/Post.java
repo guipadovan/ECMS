@@ -33,9 +33,9 @@ public class Post {
     private String subtitle;
     @Column(nullable = false, columnDefinition = "MEDIUMTEXT")
     private String text;
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Collection<PostReaction> reactions = new ArrayList<>();
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Collection<PostComment> comments = new ArrayList<>();
     @Column(nullable = false)
     private LocalDateTime postedAt, updatedAt;

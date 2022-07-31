@@ -86,13 +86,13 @@ const PostForm = ({defaultValues, submit}) => {
             <HStack justifyContent={'space-between'} w={'full'}>
               <Box borderRadius={'md'} bg={fieldBg} border={'2px solid'} borderColor={'transparent'}
                    _hover={{bg: fieldHoverBg}} transition={'0.3s ease'} h={10} px={4} justifyContent={'center'}>
-                <Field as={Checkbox} id='locked' name='locked' h={'full'} w={'full'}>
+                <Field as={Checkbox} id='locked' name='locked' h={'full'} w={'full'} value={true}>
                   Locked
                 </Field>
               </Box>
               <Button loadingText='Posting' size='md' bg={'blue.400'} color={'white'} type='submit'
-                      colorScheme='blue'
-                      isLoading={isSubmitting} isDisabled={!isValid || !dirty} _hover={{bg: 'blue.500'}}>
+                      colorScheme='blue' isLoading={isSubmitting} isDisabled={!isValid || !dirty}
+                      _hover={{bg: 'blue.500'}}>
                 Save
               </Button>
             </HStack>

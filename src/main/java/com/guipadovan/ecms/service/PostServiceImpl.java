@@ -92,7 +92,7 @@ public class PostServiceImpl implements PostService {
     public void switchLockedPost(Long id, AppUser updatedBy) {
         Post post = getPost(id).orElseThrow(() -> new NullPointerException("Post not found"));
 
-        log.info("{} post {} by {}", (post.isLocked() ? "Unlocking" : "Locking"),post.getTitle(),
+        log.info("{} post {} by {}", (post.isLocked() ? "Unlocking" : "Locking"), post.getTitle(),
                 updatedBy.getUsername());
 
         post.setLastUpdatedBy(updatedBy);

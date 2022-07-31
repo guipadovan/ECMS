@@ -1,5 +1,5 @@
 import {extendTheme} from '@chakra-ui/react';
-import {mode, StyleFunctionProps} from '@chakra-ui/theme-tools';
+import {mode} from '@chakra-ui/theme-tools';
 
 export default extendTheme({
   styles: {
@@ -13,13 +13,13 @@ export default extendTheme({
           width: '8px',
         },
         '::-webkit-scrollbar-track': {
-          my: '1px',
+          bg: mode('gray.100', 'rgb(34, 42, 55)')(props),
         },
         '::-webkit-scrollbar-thumb': {
-          bg: mode('gray.100', 'gray.900')(props),
+          bg: mode('gray.400', 'gray.900')(props),
           borderRadius: '5vw',
           border: '2px solid',
-          borderColor: mode('white', 'rgb(34, 42, 55)')(props),
+          borderColor: mode('gray.100', 'rgb(34, 42, 55)')(props),
         }
       },
 
@@ -27,7 +27,7 @@ export default extendTheme({
   },
   components: {
     Input: {
-      baseStyle: (props: StyleFunctionProps) => ({
+      baseStyle: (props) => ({
         field: {
           bg: props.colorMode === 'light' ? 'gray.100' : 'blackAlpha.400',
         },

@@ -25,7 +25,7 @@ This project was created with the purpose of testing and training my backend & f
   - Reactions
 
 ### Planned
-- Admin & User dashboard
+- Revamp Home Layout
 
 ### Pictures
 
@@ -34,4 +34,5 @@ This project was created with the purpose of testing and training my backend & f
 <img src="https://i.imgur.com/uCmAxpS.png" alt="posts page">
 <img src="https://i.imgur.com/CcLvWKV.png" alt="new post page">
 <img src="https://i.imgur.com/64RqlLF.png" alt="post update page">
-<img src="https://i.imgur.com/6okaCmM.png" alt="home page">
+<img src="https://i.imgur.com/xZ76XMj.png" alt="home page">
+<img src="https://i.imgur.com/gXh5apw.png" alt="post page">

@@ -1,10 +1,12 @@
 import useAxiosPrivate from '../../../hooks/useAxiosPrivate';
 import Card from "../../../components/card/Card";
 import PostForm from "../../../components/forms/PostForm";
+import {useNavigate} from "react-router";
 
 export default function AddPost() {
 
   const axiosPrivate = useAxiosPrivate();
+  const navigate = useNavigate();
 
   return (
     <Card label={'New Post'}>
@@ -24,10 +26,10 @@ export default function AddPost() {
           subtitle: values.subtitle,
           text: JSON.stringify(values.text),
           locked: values.locked,
-        }).then(() => {
+        }).then(res => {
           actions.resetForm();
           actions.setSubmitting(false);
-          // TODO redirect to post page
+          navigate('/post/' + res.data.id);
         }).catch(err => {
           actions.setSubmitting(false);
           console.log(err);

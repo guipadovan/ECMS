@@ -113,6 +113,7 @@ export default function Posts() {
           )
         });
         setPosts(postTableContent);
+        console.log(postTableContent);
 
         const first = res.data.first, last = res.data.last, current = res.data.number,
           totalPages = res.data.totalPages;
@@ -248,7 +249,7 @@ const Confirmation = ({populate, search, page, id}) => {
       <AlertDialog isOpen={isOpen} leastDestructiveRef={cancelRef} onClose={onClose}
                    motionPreset='slideInBottom' isCentered>
         <AlertDialogOverlay>
-          <AlertDialogContent bg={'gray.900'}>
+          <AlertDialogContent bg={'gray.900'} _light={{bg: 'white'}}>
             <AlertDialogCloseButton/>
             <AlertDialogHeader fontSize='lg' fontWeight='bold'>
               Delete Post

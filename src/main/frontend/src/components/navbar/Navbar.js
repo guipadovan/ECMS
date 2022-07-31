@@ -90,8 +90,8 @@ export default function Navbar(props) {
 
   return (
     <Flex position='fixed' top='16px' left='50%' transform='translate(-50%, 0px)' background={navbarBg}
-          boxShadow={navbarShadow} borderRadius='15px' px='16px' py='22px' mx='auto' width='1044px'
-          maxW='90%' alignItems='center'>
+          boxShadow={navbarShadow} borderRadius='15px' px='16px' py='22px' mx='auto' width='90%'
+          maxW='90%' alignItems='center' zIndex={'15'}>
       <Flex w='100%' justifyContent={{sm: 'start', lg: 'space-between'}}>
         {brand}
         <Box ms={{base: 'auto', lg: '0px'}} display={{base: 'flex', lg: 'none'}}>
