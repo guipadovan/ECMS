@@ -1,8 +1,8 @@
-import routes from './routes';
+import routes from './services/routes';
 import {useRoutes} from 'react-router-dom';
-import useAuth from './hooks/useAuth';
 import useRefreshToken from './hooks/useRefreshToken';
 import {useEffect} from 'react';
+import {useAuth} from './features/auth';
 
 export default function App() {
   const {auth} = useAuth();

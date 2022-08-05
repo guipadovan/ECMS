@@ -4,7 +4,7 @@ import {createEditor, Editor, Node, Transforms} from 'slate';
 import {withHistory} from 'slate-history';
 import {Box, useColorModeValue,} from '@chakra-ui/react';
 import {useField} from 'formik';
-import {Element, Leaf, Toolbar} from "./RTAComponents";
+import {Element, Leaf, Toolbar} from './RTAComponents';
 
 const RichTextArea = ({isInvalid, name, ...rest}) => {
   const renderElement = useCallback(props => <Element {...props} />, []);

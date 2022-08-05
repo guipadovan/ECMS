@@ -1,12 +1,12 @@
-import useAuth from './useAuth';
-import axios from '../api/axios';
 import jwtDecode from 'jwt-decode';
+import {useAuth} from '../features/auth';
+import apiPrivate from '../services/axios';
 
 const useRefreshToken = () => {
   const {setAuth} = useAuth();
 
   return async () => {
-    const res = await axios.get('/auth/refresh', {
+    const res = await apiPrivate.get('/auth/refresh', {
       withCredentials: true,
     });
 

@@ -54,14 +54,18 @@ public class JWTTokenHelper {
                 .compact();
     }
 
-    public String createRefreshToken(AppUser appUser) {
+    public String createRefreshToken(AppUser appUser, int expiresIn) {
         return Jwts.builder()
                 .setIssuer(appName)
                 .setSubject(appUser.getUsername())
                 .setIssuedAt(new Date())
-                .setExpiration(generateExpirationDate(refreshExpiresIn))
+                .setExpiration(generateExpirationDate(expiresIn))
                 .signWith(SIGNATURE_ALGORITHM, secretKey)
                 .compact();
+    }
+
+    public String createRefreshToken(AppUser appUser) {
+        return createRefreshToken(appUser, refreshExpiresIn);
     }
 
     public boolean validateToken(String token) {

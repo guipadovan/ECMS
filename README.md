@@ -29,10 +29,10 @@ This project was created with the purpose of testing and training my backend & f
 
 ### Pictures
 
-<img src="https://i.imgur.com/d5dCIhN.png" alt="signin page">
-<img src="https://i.imgur.com/gVnMP3H.png" alt="signup page">
+<img src="https://i.imgur.com/Km31QLO.png" alt="signin page">
+<img src="https://i.imgur.com/neK3F42.png" alt="signup page">
 <img src="https://i.imgur.com/uCmAxpS.png" alt="posts page">
 <img src="https://i.imgur.com/CcLvWKV.png" alt="new post page">
 <img src="https://i.imgur.com/64RqlLF.png" alt="post update page">
-<img src="https://i.imgur.com/xZ76XMj.png" alt="home page">
-<img src="https://i.imgur.com/gXh5apw.png" alt="post page">
+<img src="https://i.imgur.com/tn9Nyeb.png" alt="home page">
+<img src="https://i.imgur.com/dVCr95t.png" alt="post page">

@@ -57,8 +57,10 @@ public class AuthController {
         if (authentication.isAuthenticated()) {
 
             // TODO set secure cookie
-            ResponseCookie refreshToken = ResponseCookie.from("jwt", tokenHelper.createRefreshToken(appUser))
-                    .httpOnly(true).path("/").maxAge((authRequest.rememberMe() ? 43200 : tokenHelper.getRefreshExpiresIn()) * 60L).build();
+            ResponseCookie refreshToken = ResponseCookie.from("jwt",
+                            (authRequest.rememberMe() ? tokenHelper.createRefreshToken(appUser, 43200) :
+                                    tokenHelper.createRefreshToken(appUser)))
+                    .httpOnly(true).path("/").maxAge(525000 * 60L).build();
 
             return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, refreshToken.toString())
                     .body(new AuthResponse(tokenHelper.createAccessToken(appUser)));
@@ -70,8 +72,14 @@ public class AuthController {
     @GetMapping(value = "/refresh")
     public ResponseEntity<?> refreshToken(@CookieValue(value = "jwt") String token) {
 
-        if (!tokenHelper.validateToken(token))
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
+        if (!tokenHelper.validateToken(token)) {
+            ResponseCookie refreshToken = ResponseCookie.from("jwt", "")
+                    .httpOnly(true).path("/").maxAge(0).build();
+
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .header(HttpHeaders.SET_COOKIE, refreshToken.toString())
+                    .body("Invalid token");
+        }
 
         AppUser appUser = appUserService.getUser(tokenHelper.getUsernameFromToken(token)).orElseThrow(() -> new IllegalStateException("User doesn't exist"));
 

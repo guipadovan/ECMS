@@ -1,4 +1,4 @@
-import {Editor, Element as SlateElement, Transforms} from "slate";
+import {Editor, Element as SlateElement, Transforms} from 'slate';
 import {
   chakra,
   Heading,
@@ -8,9 +8,9 @@ import {
   OrderedList,
   UnorderedList,
   useColorMode
-} from "@chakra-ui/react";
-import {useSlate} from "slate-react";
-import React from "react";
+} from '@chakra-ui/react';
+import {useSlate} from 'slate-react';
+import React from 'react';
 import {
   MdCode,
   MdFormatAlignCenter,
@@ -25,7 +25,7 @@ import {
   MdFormatUnderlined,
   MdLooksOne,
   MdLooksTwo
-} from "react-icons/all";
+} from 'react-icons/all';
 
 const LIST_TYPES = ['numbered-list', 'bulleted-list'];
 const TEXT_ALIGN_TYPES = ['left', 'center', 'right', 'justify'];

@@ -21,11 +21,10 @@ import {
 import {FaHome, FaUser} from 'react-icons/all';
 import {ColorModeSwitcher} from '../components/ColorModeSwitcher';
 import {Outlet, useLocation} from 'react-router';
-import DashboardSidebar from '../components/navbar/DashboardSidebar';
 import {ChevronRightIcon, HamburgerIcon} from '@chakra-ui/icons';
-import routes from '../routes';
+import routes from '../services/routes';
 import {NavLink} from 'react-router-dom';
-import MenuHeader from '../components/navbar/MenuHeader';
+import {DashboardSidebar, MenuHeader} from '../features/dashboard';
 
 export default function DashboardLayout() {
   const sidebar = useDisclosure();
