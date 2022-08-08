@@ -32,6 +32,7 @@ build/
 
 ### VS Code ###
 .vscode/
-/src/main/frontend/node_modules/
-/src/main/frontend/.prettierrc
+/frontend/node_modules/
+/frontend/.prettierrc
+/frontend/README.md
 
