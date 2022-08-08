@@ -74,11 +74,60 @@ public class AppUserServiceImpl implements AppUserService {
     }
 
     @Override
-    public void addRoleToUser(String username, String roleName) {
-        Role role = getRole(roleName).orElseThrow(() -> new IllegalStateException("Role not found"));
+    public void deleteUser(String username) {
         getUser(username).ifPresentOrElse(appUser -> {
-            log.info("Adding new role {} to user {}", role.getName(), appUser.getUsername());
-            appUser.getRoles().add(role);
+            log.info("Deleting {}'s account", username);
+            appUserRepository.delete(appUser);
+        }, () -> {
+            throw new NullPointerException("User " + username + " not found");
+        });
+    }
+
+    @Override
+    public void banUser(String username) {
+        getUser(username).ifPresentOrElse(appUser -> {
+            if (appUser.isLocked())
+                throw new IllegalStateException("User " + username + " is already banned");
+
+            log.info("Banning {}'s account", username);
+            appUser.setLocked(true);
+        }, () -> {
+            throw new NullPointerException("User " + username + " not found");
+        });
+    }
+
+    @Override
+    public void unbanUser(String username) {
+        getUser(username).ifPresentOrElse(appUser -> {
+            if (!appUser.isLocked())
+                throw new IllegalStateException("User " + username + " is not banned");
+
+            log.info("Unbanning {}'s account", username);
+            appUser.setLocked(false);
+        }, () -> {
+            throw new NullPointerException("User " + username + " not found");
+        });
+    }
+
+    @Override
+    public void setUserRole(String username, String roleName) {
+        Role role = getRole(roleName).orElseThrow(() -> new NullPointerException("Role not found"));
+        getUser(username).ifPresentOrElse(appUser -> {
+            log.info("Setting new role {} to user {}", role.getName(), appUser.getUsername());
+            appUser.setRole(role);
+        }, () -> {
+            throw new NullPointerException("User " + username + " not found");
+        });
+    }
+
+    @Override
+    public void disableUser(String username) {
+        getUser(username).ifPresentOrElse(appUser -> {
+            if (!appUser.isEnabled())
+                throw new IllegalStateException("User " + username + " is not enabled");
+
+            log.info("Disabling {}'s account", username);
+            appUser.setEnabled(false);
         }, () -> {
             throw new NullPointerException("User " + username + " not found");
         });
@@ -87,6 +136,9 @@ public class AppUserServiceImpl implements AppUserService {
     @Override
     public void enableUser(String username) {
         getUser(username).ifPresentOrElse(appUser -> {
+            if (appUser.isEnabled())
+                throw new IllegalStateException("User " + username + " is already enabled");
+
             log.info("Enabling {}'s account", username);
             appUser.setEnabled(true);
         }, () -> {

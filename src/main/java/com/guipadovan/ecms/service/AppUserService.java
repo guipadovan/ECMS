@@ -16,7 +16,15 @@ public interface AppUserService extends UserDetailsService {
 
     Optional<ConfirmationToken> saveConfirmationToken(ConfirmationToken token);
 
-    void addRoleToUser(String username, String role);
+    void deleteUser(String username);
+
+    void banUser(String username);
+
+    void unbanUser(String username);
+
+    void setUserRole(String username, String role);
+
+    void disableUser(String username);
 
     void enableUser(String username);
 

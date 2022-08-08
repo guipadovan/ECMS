@@ -2,7 +2,6 @@ package com.guipadovan.ecms.config;
 
 import com.guipadovan.ecms.domain.AppUser;
 import com.guipadovan.ecms.domain.Permission;
-import com.guipadovan.ecms.domain.Role;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -40,8 +39,8 @@ public class JWTTokenHelper {
         Map<String, Object> claims = new HashMap<>();
         claims.put("id", appUser.getId());
         claims.put("email", appUser.getEmail());
-        claims.put("roles", appUser.getRoles().stream().map(Role::getName).collect(Collectors.toList()));
-        claims.put("permissions", appUser.getRoles().stream().map(role -> role.getPermissions().stream().map(Permission::name).collect(Collectors.toList())).collect(Collectors.toList()));
+        claims.put("roles", appUser.getRole().getName());
+        claims.put("permissions", appUser.getRole().getPermissions().stream().map(Permission::name).collect(Collectors.toList()));
         claims.put("createdAt", appUser.getCreatedAt().toString());
         claims.put("locked", appUser.isLocked());
         return Jwts.builder()

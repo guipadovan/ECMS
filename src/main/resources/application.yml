@@ -47,5 +47,5 @@ config:
     username: Guii
     email: "guipadovam@gmail.com"
     password: asd123
-  master-role: admin
-  default-role: user
+  master-role: Admin
+  default-role: User

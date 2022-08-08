@@ -32,8 +32,8 @@ public class AppUser implements UserDetails {
     @Column(nullable = false)
     private String password;
     private LocalDateTime createdAt;
-    @OneToMany(fetch = FetchType.EAGER)
-    private Collection<Role> roles = new ArrayList<>();
+    @OneToOne(fetch = FetchType.EAGER)
+    private Role role;
     private boolean locked, enabled;
 
     public AppUser(String username, String email, String password, LocalDateTime createdAt) {
@@ -48,10 +48,8 @@ public class AppUser implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Collection<SimpleGrantedAuthority> grantedAuthorities = new ArrayList<>();
-        roles.forEach(role -> {
-            grantedAuthorities.add(new SimpleGrantedAuthority(role.getName()));
-            role.getPermissions().forEach(permission -> grantedAuthorities.add(new SimpleGrantedAuthority(permission.name())));
-        });
+        grantedAuthorities.add(new SimpleGrantedAuthority(role.getName()));
+        role.getPermissions().forEach(permission -> grantedAuthorities.add(new SimpleGrantedAuthority(permission.name())));
         return grantedAuthorities;
     }
 
