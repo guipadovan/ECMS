@@ -11,6 +11,7 @@ import {BsBoxArrowInRight, FaCog, FaHome, FaNewspaper, FaShoppingCart, FaUserAlt
 import DashboardLayout from '../layouts/Dashboard';
 import Post from '../views/Post';
 import UpdatePost from '../views/dashboard/UpdatePost';
+import Users from "../views/dashboard/Users";
 
 const routes = (isLoggedIn) => [
   {
@@ -21,6 +22,7 @@ const routes = (isLoggedIn) => [
     children: [
       {path: '/app/', element: <Navigate to='/app/dashboard'/>, name: 'Home'},
       {path: '/app/dashboard', element: <Dashboard/>, name: 'Dashboard', nav: {nav: 'user', icon: FaCog}},
+      {path: '/app/users', element: <Users/>},
       {path: '/app/profile', element: <Profile/>, name: 'Profile', nav: {nav: 'user', icon: FaUserAlt}},
       {
         path: '/app/posts',

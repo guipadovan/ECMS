@@ -12,19 +12,17 @@ import {
 } from '@chakra-ui/react';
 import {useEffect, useState} from 'react';
 import useAxiosPrivate from '../../hooks/useAxiosPrivate';
-import {useNavigate} from 'react-router';
-import {getPosts} from '../../features/post';
 import {Card} from '../../features/dashboard';
+import {getUsers} from "../../features/user";
 
-const Posts = () => {
+const Users = () => {
 
   const axiosPrivate = useAxiosPrivate();
-  const navigate = useNavigate();
   const [pagination, setPagination] = useState();
-  const [posts, setPosts] = useState();
+  const [users, setUsers] = useState();
 
   useEffect(() => {
-    getPosts(0, setPosts, setPagination, axiosPrivate, navigate);
+    getUsers(0, setUsers, setPagination, axiosPrivate);
   }, []);
 
   const bgColor = useColorModeValue('gray.200', 'blackAlpha.400');
@@ -32,8 +30,8 @@ const Posts = () => {
   const navbarBg = useColorModeValue('white', 'gray.800');
 
   return (
-    <Card label={'Posts'}>
-      {!posts ? (
+    <Card label={'Users'}>
+      {!users ? (
         <SlideFade in={true} offsetY='20px'>
           <Box w={'full'} align={'center'} mt={'10px'}>
             <Spinner thickness='4px' speed='0.65s' emptyColor={bgColor} color='blue.500' size='xl'/>
@@ -60,17 +58,16 @@ const Posts = () => {
             <Table variant='simple'>
               <Thead>
                 <Tr>
-                  <Th>ID</Th>
-                  <Th>Title</Th>
-                  <Th>Author</Th>
-                  <Th>Posted At</Th>
-                  <Th>Updated At</Th>
-                  <Th>Comments</Th>
+                  <Th>Username</Th>
+                  <Th>E-mail</Th>
+                  <Th>Roles</Th>
+                  <Th>Joined in</Th>
+                  <Th>Status</Th>
                   <Th>Actions</Th>
                 </Tr>
               </Thead>
               <Tbody _last={{borderBottom: '0'}}>
-                {posts}
+                {users}
               </Tbody>
             </Table>
           </TableContainer>
@@ -83,4 +80,4 @@ const Posts = () => {
   );
 }
 
-export default Posts;
+export default Users;

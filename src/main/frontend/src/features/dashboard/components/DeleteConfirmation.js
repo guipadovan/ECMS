@@ -13,14 +13,14 @@ import {
 import {useRef} from 'react';
 import {FaTrash} from 'react-icons/all';
 
-export const PostDeleteButton = ({action}) => {
+export const DeleteConfirmation = ({action, object}) => {
   const {isOpen, onOpen, onClose} = useDisclosure();
   const cancelRef = useRef();
 
   return (
     <>
       <IconButton size='sm' color={'white'} bg={'red.500'} colorScheme={'red'} _hover={{bg: 'red.600'}}
-                  onClick={onOpen} icon={<FaTrash/>} aria-label={'delete post'}/>
+                  onClick={onOpen} icon={<FaTrash/>} aria-label={'delete ' + object}/>
 
       <AlertDialog isOpen={isOpen} leastDestructiveRef={cancelRef} onClose={onClose}
                    motionPreset='slideInBottom' isCentered>
@@ -28,7 +28,7 @@ export const PostDeleteButton = ({action}) => {
           <AlertDialogContent bg={'gray.900'} _light={{bg: 'white'}}>
             <AlertDialogCloseButton/>
             <AlertDialogHeader fontSize='lg' fontWeight='bold'>
-              Delete Post
+              Delete {object}
             </AlertDialogHeader>
 
             <AlertDialogBody>

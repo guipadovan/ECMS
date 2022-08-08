@@ -25,7 +25,7 @@ This project was created with the purpose of testing and training my backend & f
   - Reactions
 
 ### Planned
-- Revamp Home Layout
+- Dashboard user management
 
 ### Pictures
 

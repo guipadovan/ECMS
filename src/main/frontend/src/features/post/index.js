@@ -1,4 +1,3 @@
-import {Pagination} from './components/Pagination'
 import {Post} from './components/Post'
 import {PostHeader} from './components/PostHeader'
 import {PostText} from './components/PostText'
@@ -9,7 +8,6 @@ import {addPost} from './services/addPost'
 import {deletePost, switchPostLock, updatePost} from './services/updatePost'
 
 export {
-  Pagination,
   Post,
   PostHeader,
   PostText,

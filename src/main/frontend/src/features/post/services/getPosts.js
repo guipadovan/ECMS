@@ -4,10 +4,10 @@ import {FaArrowRight, FaCommentDots, FaLock, FaLockOpen, FaPencilAlt} from 'reac
 import {PostHeader} from '../components/PostHeader';
 import {PostText} from '../components/PostText';
 import {dateFormat} from '../../../services/date';
-import {Pagination} from '../components/Pagination';
+import {Pagination} from '../../../components/navigation/Pagination';
 import {Post} from '../components/Post';
 import {deletePost, switchPostLock} from './updatePost';
-import {PostDeleteButton} from '../components/PostDeleteButton';
+import {DeleteConfirmation} from '../../dashboard';
 
 const postsRequest = async (page, size) => {
   return await api.get('/post/posts', {
@@ -61,7 +61,7 @@ export const getPosts = (page, setPosts, setPagination, axiosPrivate, navigate) 
                             _hover={{bg: 'blue.500'}}
                             onClick={() => navigate('/app/posts/update/' + post.id)}
                             icon={<FaPencilAlt/>} aria-label={'edit post'}/>
-                <PostDeleteButton action={() => {
+                <DeleteConfirmation object={'Post'} action={() => {
                   deletePost(axiosPrivate, post.id).then(() => {
                     getPosts(page, setPosts, setPagination, axiosPrivate, navigate);
                   })
@@ -83,12 +83,7 @@ export const getPosts = (page, setPosts, setPagination, axiosPrivate, navigate) 
       );
     })
     .catch(() => {
-      setPosts(
-        <Box p={8} rounded={'lg'}>
-          <Heading size={'xl'}>Empty!</Heading>
-          <Heading size={'md'}>There are no posts yet :(</Heading>
-        </Box>
-      );
+
     })
 }
 

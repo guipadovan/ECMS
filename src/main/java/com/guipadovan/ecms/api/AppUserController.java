@@ -6,6 +6,7 @@ import com.guipadovan.ecms.service.AppUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,6 +31,18 @@ public class AppUserController {
         AppUserResponse response = new AppUserResponse(appUser.getUsername(), appUser.getCreatedAt(), appUser.getRole());
 
         return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/{id}/delete")
+    public ResponseEntity<String> deletePost(@AuthenticationPrincipal AppUser appUser, @PathVariable("id") long userId) {
+        if (appUser.getId() == userId)
+            throw new IllegalStateException("You cannot delete your own account");
+
+        AppUser toDeleteAppUser = appUserService.getUserById(userId).orElseThrow(() -> new UsernameNotFoundException("User " + userId + " not found"));
+
+        appUserService.deleteUser(toDeleteAppUser.getUsername());
+
+        return ResponseEntity.ok("User deleted successfully");
     }
 
     @GetMapping("/users")
